@@ -65,9 +65,51 @@ habilidades: ["VueJS", "Ruby on Rails", "Elixir"]
    resultado += " possui as seguntes habilidades: " + habilidades;
    document.getElementById('rocket5').innerHTML = resultado;
  }
+}
 
+function rocket2_1() {
 
+  var elemento_pai = document.getElementById('rocket2_1');
 
+  var caixa = document.createElement('div');
+  caixa.style.height = '100px';
+  caixa.style.width = '100px';
+  caixa.style.backgroundColor = 'red';
+  caixa.onmouseover = function() {  caixa.style.backgroundColor = getRandomColor(); }
+  elemento_pai.appendChild(caixa);
+}
 
+function getRandomColor() {
+var letters = "0123456789ABCDEF";
+var color = "#";
+for (var i = 0; i < 6; i++) {
+color += letters[Math.floor(Math.random() * 16)];
+}
+return color;
+}
 
+function rocket2_3() {
+  var nomes = ["Diego", "Gabriel", "Lucas"];
+  var elemento_pai = document.getElementById('rocket2_3');
+  var lista = document.createElement('ul');
+  lista.id = 'lista';
+
+  nomes.forEach((item, i) => {
+    var item = document.createElement('li');
+    var t = document.createTextNode(nomes[i]);
+    item.appendChild(t);
+    lista.appendChild(item);
+  });
+
+  elemento_pai.appendChild(lista);
+}
+
+function rocket2_4() {
+  var lista = document.getElementById('lista');
+  var item = document.createElement('li');
+  var user_input = document.getElementById('input').value;
+  var t = document.createTextNode(user_input);
+  item.appendChild(t);
+  lista.appendChild(item);
+  
 }
