@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <title>Ativ2</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      $(function(){
+
+
+
+        var glossario = [{"id":1, "termo":"W3C"
+        		,  "definicao": "World Wide Web Consortium – escritório responsável por desenvolver normas técnicas para a Internet"
+        		, "autor": "José Borges", "dataCriacao": "2015-04-01"}
+        		,{"id":2, "termo":"HTML"
+        		, "definicao": "HyperText Markup Language – linguagem de marcação utilizada para estruturar páginas web"
+        		, "autor": "Pedro Silva", "dataCriacao": "2017-05-12"}
+        		,{"id":3, "termo": "CSS"
+        		, "definicao": "Cascade Style Sheet – Folhas de estilo utilizadas para configurar a visualização de  páginas web"
+        		, "autor": "Maria Machado", "dataCriacao": "2018-10-11"}];
+
+
+      $(glossario).each(function(idx, tudo){
+             // pega a linha
+               let tit = tudo.termo;
+
+               $("#lista")
+       				.append(
+       					$("<li>")
+       					.text(tit).attr("value", idx)
+              )
+
+        $("#lista").on("click","li", function(){
+        let id = $(this).val();
+
+        $("#iptn_termo").text(glossario[id].termo);
+        $("#iptn_definicao").text(glossario[id].definicao);
+        $("#iptn_autor").text(glossario[id].autor);
+        $("#iptn_dataCriacao").text(glossario[id].dataCriacao);
+
+        })
+
+
+    })
+
+    function typeWrite(elemento){
+    const textoArray = elemento.innerHTML.split('');
+    elemento.innerHTML = ' ';
+    textoArray.forEach(function(letra, i){
+
+    setTimeout(function(){
+        elemento.innerHTML += letra;
+    }, 75 * i)
+
+  });
+}
+const titulo = document.querySelector('.digita');
+typeWrite(titulo);
+
+    	});
+    </script>
+
+    <style>
+      body {
+        background-color: black;
+        color:green;
+      }
+
+
+.digita:after{
+ content: '|';
+ margin-left: 5px;
+ opacity: 1;
+ animation: pisca .7s infinite;
+}
+/* Animação aplicada ao content referente a classe *.titulo-principal* resultando num efeito de cursor piscando. */
+
+@keyframes pisca{
+    0%, 100%{
+        opacity: 1;
+    }
+    50%{
+        opacity: 0;
+    }
+}
+
+
+    </style>
+  </head>
+  <body>
+    <p class="digita" id="busca">Buscando glossário ...</p>
+    <p class="digita">Termos encontrados no glossário:</p>
+    <ul id="lista">
+
+    </ul>
+    <br>
+    <p>*clique sobre o termo para saber mais</p>
+    <br><br>
+    <fieldset class="conteiner">
+      <legend>Descrição</legend>
+      <h3 id="iptn_termo" class="digita"></h3>
+      <p id="iptn_definicao" class="digita"></p>
+      <p class="digita"><i><span id="iptn_autor"></span> - <span id="iptn_dataCriacao"></i></span></p>
+
+    </fieldset>
+  </body>
+</html>
