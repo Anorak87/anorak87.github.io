@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<!--[if IE 8 ]><html class='no-js oldie ie8' lang='pt-br'> <![endif]-->
+<!--[if IE 9 ]><html class='no-js oldie ie9' lang='pt-br'> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html class='no-js' lang='pt-br'> <!--<![endif]-->
+<head>
+
+   <!--- basic page needs
+   ================================================== -->
+   <meta charset='utf-8'>
+	<title>Pasch0</title>
+	<meta name='description' content=''>
+	<meta name='author' content=''>
+
+   <!-- mobile specific metas
+   ================================================== -->
+	<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'>
+
+ 	<!-- CSS -->
+
+   <link rel='stylesheet' href='../css/base.css'>
+
+   <link rel='stylesheet' href='../css/main.css'>
+
+   <link rel='stylesheet' href='../css/vendor.css'>
+
+   <style>
+     h2 {
+       color:gray;
+     }
+
+     .resp {
+       border-style: solid;
+       border-color: lightblue;
+     }
+
+     .dificil {
+       font-family: monospace;
+       font-size: 50px;
+       color: green;
+       border-style: solid;
+       border-color: green;
+     }
+
+     .media {
+       font-family: monospace;
+       font-size: 50px;
+       color: orange;
+       border-style: solid;
+       border-color: orange;
+     }
+
+     .fraca {
+       font-family: monospace;
+       font-size: 50px;
+       font-weight: bolder;
+       color: red;
+       border-style: solid;
+       border-color:red;
+     }
+   </style>
+
+
+   <!-- script -->
+
+
+
+
+  <!--Own Js file for activities-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="moment.js"></script>
+  <script>
+    $(function(){
+      //Atividade 1
+      $("#btn_1").on("click", function(){
+
+        let text = $('#inp_1').val();
+        //console.log(text);
+        text = text.split('').reverse().join('');
+        $('#resp_1').text(text);
+
+      })
+
+      //Atividade 2
+      $("#btn_2").on("click", function(){
+
+        let text = $('#inp_2').val();
+        //console.log(text);
+        text = text.split('');
+        for (i = 0; i < text.length; i++) {
+          text_low = text[i].toLowerCase();
+          if (text_low == "a" || text_low == "e" || text_low == "i" || text_low == "o" || text_low == "u") {
+            //console.log(text[i]);
+            text[i] = text[i].bold();
+          }
+        }
+        //console.log(text);
+        text = text.join('');
+        //console.log(text);
+        $('#resp_2').html(text);
+      })
+
+      //Atividade 3
+      $("#btn_3").on("click", function(){
+        $('#lista td').remove();
+        let text = $('#inp_3').val();
+        //console.log(text);
+        text = text.split(' ');
+        let biblio = [''];
+        //console.log(biblio);
+        for (i = 0; i < text.length; i++) {
+          //console.log(text[i]);
+          let verifica = 0;
+          for (var j = -1; j < biblio.length; j++) {
+            if (biblio[j+1] == text[i]) {
+              verifica ++;
+            }
+          }
+          //console.log(verifica);
+          if (verifica == 0) {
+            biblio.push(text[i]);
+            //console.log(biblio);
+            let vez = 0;
+            for (var x = 0; x < text.length; x++) {
+              if (text[x] == text[i]) {
+                vez++;
+              }
+            }
+
+            $("#lista")
+              .append($("<tr>")
+                .append($("<td>").text(text[i]).addClass("item"))
+                  .append($("<td>").text(vez).addClass("item")));
+
+          }
+        }
+      })
+
+      //Atividade 4
+      $("#btn_4").on("click", function(){
+        $('#lista2 td').remove();
+        let text = $('#inp_4').val();
+        //console.log(text);
+        text = text.split(' ');
+        let palavra = '';
+        let vezes_antigo = 0;
+
+        for (i = 0; i < text.length; i++) {
+          //console.log(text[i]);
+          var vezes_novo = 0;
+          for (var j = 0; j < text.length; j++) {
+            if (text[j] == text[i]) {
+              vezes_novo ++;
+              var palavra_nv = text[j]
+            }
+          }
+          //console.log(verifica);
+          if (vezes_novo > vezes_antigo) {
+            vezes_antigo = vezes_novo;
+            palavra = text[i];
+
+          }
+        }
+        if (vezes_novo == vezes_antigo && palavra != palavra_nv) {
+         palavra = palavra + " & " + palavra_nv;
+       }
+
+        $("#lista2")
+          .append($("<tr>")
+            .append($("<td>").text(palavra).addClass("item"))
+              .append($("<td>").text(vezes_antigo).addClass("item")));
+      })
+
+      //Atividade 5
+      $("#btn_5").on("click", function(){
+
+        let text = $('#resp_5').text();
+        //console.log(text)
+        let palavra_procurada = $('#inp_5_1').val();
+        //console.log(palavra_procurada)
+        let palavra_para_substituir = $('#inp_5_2').val();
+        //console.log(palavra_para_substituir);
+        text = text.split(' ');
+        for (i = 0; i < text.length; i++) {
+          if (text[i] == palavra_procurada) {
+            //console.log(text[i]);
+            text[i] = palavra_para_substituir;
+          }
+        }
+        //console.log(text);
+        text = text.join(' ');
+        //console.log(text);
+        $('#resp_5').html(text);
+      })
+
+      //Atividade 6
+      $("#btn_6").on("click", function(){
+
+        var data_nasc = $('#inp_6').val();
+        //console.log(data_nasc);
+        var now = moment(new Date());
+        //console.log(data_hj);
+        var data_nasc = data_nasc.split('-');
+
+        //var stringFormatada = data_nasc[2] + '-' + data_nasc[1] + '-' + data_nasc[0];
+        var data_nasc = new Date(data_nasc[0], data_nasc[1] - 1, data_nasc[2]);
+        //var data_nasc = new Date(stringFormatada);
+        //console.log(data_nasc);
+        //console.log(now);
+
+        var duracao = moment.duration(now.diff(data_nasc));
+        // Mostra a diferença em dias
+        var dias = duracao.asDays();
+        dias = Math.floor(dias);
+        //console.log(dias);
+        text = "Esta pessoa tem " + dias + " dias de vida";
+        $('#resp_6').html(text);
+
+      })
+
+      //Atividade 7
+      $("#btn_7").on("click", function(){
+
+        var data = $('#inp_7').val();
+        var data = data.split('-');
+        var ano = data[0];
+        var mes_n = data[1];
+        var dia = data[2];
+        var mes;
+        //console.log(mes_n);
+        switch (mes_n) {
+          case "01":
+            mes = "Janeiro";
+            break;
+
+          case "02":
+            mes = "Fevereiro";
+            break;
+
+          case "03":
+            mes = "Março";
+            break;
+
+          case "04":
+            mes = "Abril";
+            break;
+
+          case "05":
+            mes = "Maio";
+            break;
+
+          case "06":
+            mes = "Junho";
+            break;
+
+          case "07":
+            mes = "Julho";
+            break;
+
+          case "08":
+            mes = "Agosto";
+            break;
+
+          case "09":
+            mes = "Setembro";
+            break;
+
+          case "10":
+            mes = "Outubro";
+            break;
+
+          case "11":
+            mes = "Novembro";
+            break;
+
+          case "12":
+            mes = "Dezembro";
+            break;
+        }
+
+        text = dia +" de "+ mes +" de "+ ano;
+        $('#resp_7').html(text);
+
+      })
+
+      //Atividade 8
+      $("#btn_8").on("click", function(){
+
+        var data1 = $('#inp_8_1').val();
+        var data2 = $('#inp_8_2').val();
+
+        var data1 = data1.split('-');
+        var data2 = data2.split('-');
+
+        var data1 = new Date(data1[0], data1[1] - 1, data1[2]);
+        var data2 = new Date(data2[0], data2[1] - 1, data2[2]);
+
+        var data1 = moment(data1);
+        var data2 = moment(data2);
+        var duracao = moment.duration(data2.diff(data1));
+        // Mostra a diferença em dias
+        var dias = duracao.asDays();
+        let semana = dias/7;
+        semana = Math.floor(semana);
+        //console.log(dias);
+        text = "Há " + semana + " Semana(as) entre estas duas datas (semanas completas)";
+        $('#resp_8').html(text);
+
+      })
+
+      //Atividade 8
+      $("#inp_9").on("keyup", function(){
+
+        var input = $('#inp_9').val();
+        var fraca = false;
+        var medio = false;
+        var dificil = false;
+        if (input.toLowerCase() == input) {
+          fraca = true;
+        } else {
+          fraca = false;
+        }
+
+        let regex = /\W|_/;
+        if (regex.test(input) === true) {
+          dificil = true;
+        }
+
+
+        var input = input.split('');
+        for (var i = 0; i < input.length; i++) {
+          if (!isNaN(input[i]) === true) {
+            medio = true;
+          }
+
+        }
+
+        //console.log(fraca);
+        //console.log(medio);
+        //console.log(dificil);
+
+        if (dificil === true && medio === true) {
+          //console.log("dificil");
+          let text = "Difícil";
+          $('#resp_9').html(text);
+          $('#resp_9_div').removeClass();
+          $('#resp_9_div').addClass('dificil');
+        } else if (medio === true) {
+          //console.log("medio");
+          let text = "Média";
+          $('#resp_9').html(text);
+          $('#resp_9_div').removeClass();
+          $('#resp_9_div').addClass('media');
+        } else if (fraca === true) {
+          //console.log("fraca");
+          let text = "Fraca";
+          $('#resp_9').html(text);
+          $('#resp_9_div').removeClass();
+          $('#resp_9_div').addClass('fraca');
+        } else {
+          //console.log("bug");
+          let text = "Caracter não aceito";
+          $('#resp_9').html(text)
+        }
+
+      })
+    });
+
+
+  </script>
+
+
+
+
+
+	</head>
+
+	<body id='top'>
+
+		<!-- header
+	   ================================================== -->
+	   <header>
+
+		   <!-- Load an icon library to show a hamburger menu (bars) on small screens -->
+		<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+
+		<div class='topnav' id='myTopnav'>
+			<a href='../index.html'><strong>Home</strong></a>
+			<a href='../js_index.html'><strong>JavaScript</strong></a>
+			<a href='../quim_index.html'><strong>Química</strong></a>
+		</div>
+
+
+	   </header> <!-- /header -->
+
+		<!-- intro section
+	   ================================================== -->
+
+
+	   <!-- about section
+	   ================================================== -->
+	<br><br>
+<section style='background-color: white;'>
+	    <br>
+	<h2>>Page Description</h2>
+	<h6 style='text-align: center; color:black;'>Bem vindo ao conteúdo de JavaScript, Selecione algum dos conteúdos disponibilizados na lista abaixo e confira a resolução das atividades propostas na seção 'Sand Box'.</h6>
+	<br>
+	<h2>>Content Index</h2>
+	<ul style='margin-left:10%;'>
+    <li><a href="../Java/rocket_1_2.html">Atividade RocketSeat 1 e 2</a></li>
+    <li><a href="../Java/Atividade_1_(passada_pelo_professor).html">Atividade 1 (passada pelo professor)</a></li>
+    <li><a href="../Java/laboratorio_jquery.html">Atividade Jquery (passada pelo professor)</a></li>
+    <li><a href="../Java/laboratorio_jquery2.html">Atividade Jquery 2 (passada pelo professor)</a></li>
+
+	</ul>
+
+<!--Fake section sandbox-->
+  <br>
+<h2>>SandBox</h2>
+<br>
+  <h5>Atividade 1: Inverter string</h5>
+  <input type="text" name="inp_1" id="inp_1" placeholder="Digite"></input>
+  <button type="button" name="button1" id="btn_1">Submeter</button>
+  <div class = "resp">
+    <!--Resposta da atividade 1-->
+    <p id="resp_1"></p>
+  </div>
+<br>
+  <h5>Atividade 2: Marcar vogais em negrito</h5>
+  <input type="text" name="inp_2" id="inp_2" placeholder="Digite"></input>
+  <button type="button" name="button1" id="btn_2">Submeter</button>
+  <div class = "resp">
+    <!--Resposta da atividade 2-->
+    <p id="resp_2"></p>
+  </div>
+<br>
+  <h5>Atividade 3: Verificar quantas vezes uma palavra se repete no texto e exibir em uma tabela (sem duplicações nos registros e com a tabela sendo limpa a cada submissão)</h5>
+  <input type="text" name="inp_3" id="inp_3" placeholder="Digite"></input>
+  <button type="button" name="button1" id="btn_3">Submeter</button>
+  <div class = "resp">
+    <!--Resposta da atividade 3-->
+    <table id="lista">
+      <tr>
+        <th>Palavra</th>
+        <th>Quantas vezes aparece</th>
+      </tr>
+    </table>
+  </div>
+<br>
+  <h5>Atividade 4: Verificar qual palavra se repete mais no texto</h5>
+  <input type="text" name="inp_4" id="inp_4" placeholder="Digite"></input>
+  <button type="button" name="button1" id="btn_4">Submeter</button>
+  <div class = "resp">
+    <!--Resposta da atividade 4-->
+    <table id="lista2">
+      <tr>
+        <th>Palavra que se repete mais</th>
+        <th>Quantas vezes aparece</th>
+      </tr>
+    </table>
+  </div>
+<br>
+  <h5>Atividade 5: Pesquisar e sustituir</h5>
+  <input type="text" name="inp_2" id="inp_5_1" placeholder="Digite o que que procurar"></input>
+  <input type="text" name="inp_2" id="inp_5_2" placeholder="Digite o que substituir"></input>
+  <button type="button" name="button1" id="btn_5">Submeter</button>
+  <div class = "resp">
+    <!--Resposta da atividade 5-->
+    <p id="resp_5">The fast fox jumps over the lazy dog</p>
+  </div>
+<br>
+  <h5>Atividade 6: Quantos dias de vida</h5>
+  <input type="date" name="inp_6" id="inp_6" placeholder="Digite o que que procurar"></input>
+
+  <button type="button" name="button1" id="btn_6">Submeter</button>
+  <div class = "resp">
+    <!--Resposta da atividade 6-->
+    <p id="resp_6"></p>
+  </div>
+<br>
+  <h5>Atividade 7: Manipulação de datas</h5>
+  <input type="date" name="inp_7" id="inp_7" placeholder=""></input>
+
+  <button type="button" name="button1" id="btn_7">Submeter</button>
+  <div class = "resp">
+    <!--Resposta da atividade 6-->
+    <p id="resp_7"></p>
+  </div>
+<br>
+  <h5>Atividade 9: Segurança em senhas</h5>
+  <div class = "resp" id = "resp_9_div">
+    <input type="text" name="inp_9" id="inp_9" placeholder="Digite Sua Senha"></input>
+
+    <!--Resposta da atividade 6-->
+    <p id="resp_9"></p>
+  </div>
+
+
+
+
+
+<!--End of the fake section sandbox-->
+
+
+	</section> <!-- end page -->
+
+
+
+   	<div class="row contact-info">
+
+   		<div class="col-four tab-full">
+
+   			<div class="icon">
+   				<i class="icon-pin"></i>
+   			</div>
+
+   			<h5>Cidade</h5>
+
+   			<p>
+           Cachoeiras de Macacu<br>
+            Rio de Janeiro<br>
+            Brasil
+            </p>
+
+   		</div>
+
+   		<div class="col-four tab-full collapse">
+
+   			<div class="icon">
+   				<i class="icon-mail"></i>
+   			</div>
+
+   			<h5>Envie um e-mail para</h5>
+
+   			<p>cauaproducoes@gmail.com</p>
+
+
+
+
+   		</div>
+
+   		<div class="col-four tab-full">
+
+   			<div class="icon">
+   				<i class="icon-phone"></i>
+   			</div>
+
+   			<h5>Me ligue</h5>
+
+   			<p>Telefone:
+			   	+ 55 21 98398-0404<br>
+
+			   </p>
+
+   		</div>
+
+
+   <footer>
+     	<div class="row">
+        <div class="col-six tab-full pull-right social">
+
+             			<ul class="footer-social">
+
+                    <li><a target="_blank"href="https://api.whatsapp.com/send?phone=5521983980404&text=Ol%C3%A1,%20gostaria%20de%20entrar%20em%20contato."><i class="fa fa-whatsapp" aria-hidden="true"></i>
+        			      <li><a target="_blank"href="https://professormirim.github.io/"><i class="fa fa-github" aria-hidden="true"></i>
+</a></li>
+        			   </ul>
+
+        	      </div>
+
+	      	<div id="go-top">
+		         <a class="smoothscroll" title="Back to Top" href="#top"><i class="fa fa-long-arrow-up"></i></a>
+		      </div>
+
+      	</div> <!-- /row -->
+   </footer>
+
+   <div id="preloader">
+    	<div id="loader"></div>
+   </div>
+
+
+
+</body>
+
+</html>
