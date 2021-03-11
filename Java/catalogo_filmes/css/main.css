@@ -1,0 +1,226 @@
+#content {
+  align-items: center;
+}
+
+h1 {
+  text-align: center;
+  color: lightgray;
+}
+
+body {
+  margin: 0px;
+  padding: 0px;
+  background-color: #333333;
+}
+
+.filme {
+  background-color: #333333;
+  color: white;
+  float: left;
+  height: auto;
+  margin: 30px;
+  width: auto;
+  max-width: 650px;
+  font-family: sans-serif;
+  transition: 1s;
+  box-shadow: 10px 5px 15px 2px rgba(0, 0, 0, 0.5);
+}
+
+.filme figure img {
+  margin-top: 0px;
+  z-index: 10;
+  position: absolute;
+    width: 180px;
+}
+
+img {
+  width: 60%;
+  height: auto;
+  margin-top: -20px;
+  margin-left: -30px;
+  margin-right: 5px;
+
+}
+
+.filme h3 {
+  position: relative;
+  padding-top: 30px;
+  padding-left: 50%;
+  text-align: center;
+  font-weight: bold;
+  margin-right: 5px;
+  padding-bottom: 35px;
+}
+
+.classificacao {
+  position: static;
+  z-index: -10;
+  font-family: monospace;
+  font-weight: bolder;
+  font-size: 20px;
+  text-align: right;
+  float: right;
+  height: 0px;
+  width: 100%;
+  transition: 1s;
+}
+
+.classificacao p {
+  line-height: 0px;
+  margin-right: 10px;
+  transition: 0s;
+}
+
+.genero {
+  margin-left: 5px;
+  font-style: italic;
+  font-family: sans-serif;
+  font-size: 15px;
+  color: darkgray;
+  margin-bottom: 30px;
+}
+
+.resumo {
+  margin-left: 5px;
+}
+
+.elenco {
+  margin-left: 5px;
+}
+
+.opinioes {
+  float: right;
+  margin-right: 5px;
+}
+
+.opinioes i {
+  margin: 1px;
+}
+
+.star_yellow {
+  color: yellow;
+}
+
+.star_gray {
+  color: gray;
+}
+
+.titulosSemelhantes {
+  float: left;
+  height: 40px;
+  width: 400px;
+  margin-top: -25px;
+}
+
+.titulosSemelhantes img {
+  width: 50px;
+  margin: 5px;
+}
+
+.livre {
+  background-color: green;
+}
+
+.restrito {
+  background-color: orange;
+}
+
+.proibido {
+  background-color: red;
+}
+
+.negrito {
+  font-weight: bold;
+}
+
+.filme:hover .classificacao {
+  height: 40px;
+}
+
+.filme:hover .star_yellow {
+  animation: rotation 2s;
+
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+.filme_livre:hover{
+  transform: translate(-10px, -10px);
+  box-shadow: 10px 10px 150px 10px rgba(2, 194, 28, 0.5);
+}
+
+.filme_restrito:hover{
+  transform: translate(-10px, -10px);
+  box-shadow: 10px 10px 150px 10px rgba(252, 123, 3, 0.5);
+}
+
+.filme_proibido:hover{
+  transform: translate(-10px, -10px);
+  box-shadow: 10px 10px 150px 10px rgba(200, 2, 2, 0.5);
+}
+/*Topnav css from index website to prevent bugs*/
+
+/* Add a black background color to the top navigation */
+.topnav {
+  background-color: rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+
+/* Style the links inside the navigation bar */
+.topnav a {
+  float: left;
+  display: block;
+  color: #08e6ff;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+/* Change the color of links on hover */
+.topnav a:hover {
+  background-color: #08e6ff;
+  color: white;
+}
+
+/* Add an active class to highlight the current page */
+.topnav a.active {
+  background-color: #08e6ff;
+  color: white;
+}
+
+/* Hide the link that should open and close the topnav on small screens */
+.topnav .icon {
+  display: none;
+}
+
+/* When the screen is less than 600 pixels wide, hide all links, except for the first one ("Home"). Show the link that contains should open and close the topnav (.icon) */
+@media screen and (max-width: 600px) {
+  .topnav a:not(:first-child) {display: none;}
+  .topnav a.icon {
+    float: right;
+    display: block;
+  }
+}
+
+/* The "responsive" class is added to the topnav with JavaScript when the user clicks on the icon. This class makes the topnav look good on small screens (display the links vertically instead of horizontally) */
+@media screen and (max-width: 600px) {
+  .topnav.responsive {position: relative;}
+  .topnav.responsive a.icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .topnav.responsive a {
+    float: none;
+    display: block;
+    text-align: left;
+  }
+}
