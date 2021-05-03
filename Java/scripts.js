@@ -111,5 +111,5 @@ function rocket2_4() {
   var t = document.createTextNode(user_input);
   item.appendChild(t);
   lista.appendChild(item);
-  
+
 }
