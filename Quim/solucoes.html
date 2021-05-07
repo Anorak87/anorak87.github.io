@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<!--[if IE 8 ]><html class='no-js oldie ie8' lang='pt-br'> <![endif]-->
+<!--[if IE 9 ]><html class='no-js oldie ie9' lang='pt-br'> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html class='no-js' lang='pt-br'> <!--<![endif]-->
+<head>
+
+   <!--- basic page needs
+   ================================================== -->
+   <meta charset='utf-8'>
+	<title>Pasch0</title>
+	<meta name='description' content=''>
+	<meta name='author' content=''>
+
+   <!-- mobile specific metas
+   ================================================== -->
+	<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'>
+
+ 	<!-- CSS -->
+
+   <link rel='stylesheet' href='../css/base.css'>
+
+   <link rel='stylesheet' href='../css/main.css'>
+
+   <link rel='stylesheet' href='../css/vendor.css'>
+
+   <style media='screen'>
+     h2 {
+       color:gray;
+     }
+		 span{
+			 font-weight: bold;
+		 }
+		 body {
+	 		text-align: left;
+	 		margin-left: 10px;
+	 		background-color: gray;
+	 	}
+	 		.correto {
+	 			background-color: lightgreen;
+	 		}
+	 		.legend {
+	 			color: white;
+	 			background-color: gray;
+	 			padding: 5px 10px;
+	 		}
+	 		.fieldset_correto {
+	 			border-color: lightgreen;
+	 		}
+	 		.fieldset_errado {
+	 			border-color: red;
+	 		}
+	 		.acerto {
+	 			text-align: left;
+	 		}
+	 		img {
+	 			width: auto;
+	 			height: 250px;
+	 			padding: 0px;
+	 			margin-left: 15%;
+	 			display: inline-block;
+	 			margin-top: 10px;
+	 			margin-bottom: 5px;
+				border: 2px solid lightgray;
+	 		}
+	 		li {
+	 			list-style-type:  none;
+	 			margin-left: 10px;
+	 		}
+	 		input {
+	 			margin-left: 10px;
+	 		}
+	 		p {
+	 			margin-left: 10px;
+	 		}
+	 		.texto_preto p {
+	 			color: lightgray;
+	 		}
+	 		iframe {
+	 			width: 550px;
+	 			height: 305px;
+	 			padding: 0px;
+	 			margin-left: 15%;
+	 			display: inline-block;
+	 		}
+   </style>
+
+
+   <!-- script -->
+	<script src='js/modernizr.js'></script>
+  	<script src="js/pace.min.js"></script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+	<script>
+	$(function() {
+
+		$( "#botao1" ).click(function() {
+			var agua = $( "#input1_1" ).val();
+			var gramas = $( "#input1_2" ).val();
+			var agua_padrao = 100;
+			var gramas_padrao = 28.1;
+
+			//regra de 3 simples
+			var gramas_max = (agua * gramas_padrao) / agua_padrao
+			//simple if
+			if (gramas > gramas_max) {
+				$( "#tipo_solu" ).text("superssaturada");
+			} else if (gramas == gramas_max) {
+				$( "#tipo_solu" ).text("saturada");
+			} else {
+				$( "#tipo_solu" ).text("insaturada");
+			}
+		});
+
+		$( "#botao2" ).click(function() {
+			var gramas = $( "#input2_1" ).val();
+			var volume = $( "#input2_2" ).val();
+
+			var mol = gramas/142.04;
+			console.log(mol);
+
+			function ajuste(nr, casas) {
+				const og = Math.pow(10, 4)
+				return Math.floor(nr * og) / og;
+			};
+			mol = ajuste(mol, 2);
+			console.log(mol);
+
+			var molaridade = mol/volume;
+
+			$( "#grama" ).text(gramas);
+			$( ".mol" ).text(mol);
+			$( ".volume" ).text(volume);
+			$( "#molaridade" ).text(molaridade);
+
+			var agua_padrao = 1;
+			var gramas_padrao = 281;
+
+			//regra de 3 simples
+			var gramas_max = (volume * gramas_padrao) / agua_padrao
+			//simple if
+			$( "#possivel" ).text(gramas_max);
+			if (gramas > gramas_max) {
+				$( "#ha_nao" ).text("Há");
+			} else {
+				$( "#ha_nao" ).text("Não há");
+			}
+		});
+
+
+	});
+	</script>
+</head>
+<body id='top'>
+
+	<!-- header
+	 ================================================== -->
+	 <header>
+
+		 <!-- Load an icon library to show a hamburger menu (bars) on small screens -->
+	<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+
+	<div class='topnav' id='myTopnav'>
+		<a href='../index.html'><strong>Home</strong></a>
+		<a href='../js_index.html'><strong>JavaScript</strong></a>
+		<a href='../quim_index.html'><strong>Química</strong></a>
+	</div>
+
+
+	 </header> <!-- /header -->
+
+	<!-- intro section
+	 ================================================== -->
+
+<br><br>
+	<section style='background-color: white;'>
+		<br>
+<h2>>Page Description</h2>
+<h6 style='text-align: center; color:black;'>Bem vindo ao conteúdo de Química, Selecione algum dos conteúdos disponibilizados na lista abaixo e confira a resolução das atividades propostas na seção 'Sand Box'.</h6>
+<br>
+<h2>>Content Index</h2>
+<ul style="margin-left:10%;">
+	<li><a href="../Quim/simula.html">Atividade de Simulações</a></li>
+	<li><a href="../Quim/atividade_gases.html">Atividade de Gases</a></li>
+	<li><a href="../Quim/gases.html">Conteúdo de Gases</a></li>
+	<li><a href="../Quim/solucoes.html">Soluções</a></li>
+</ul>
+
+<!--Fake section sandbox-->
+<br>
+<h2>>SandBox</h2>
+
+	<h1>$ Soluções</h1>
+	<p>Soluções são as misturas resultantes da união de duas ou mais substâncias diferentes, que se apresentam obrigatoriamente em uma única fase no seu aspecto visual, como a água do mar (formada pela associação de água e diferentes sais). Por se tratar de misturas homogêneas, as soluções são formadas pela associação de pelo menos um material capaz de ser dissolvido por outro. Esse material dissolvido é denominado soluto, e o que dissolve é denominado solvente. A propriedade mais importante da matéria nas soluções é a solubilidade, já que nesse tipo de mistura existe a dissolução de um material por outro. Porém, vale ressaltar que cada solvente apresenta uma solubilidade para cada tipo de soluto de acordo com a temperatura, o que é denominado de coeficiente de solubilidade.</p>
+
+	<h2>~ Tipos de soluções</h2>
+	<li>Sólidas: soluções em que o solvente está no estado sólido. Exemplo: ouro 18 quilates;</li>
+	<li>Líquidas: soluções em que o solvente está no estado líquido. Exemplo: refrigerante;</li>
+	<li>Gasosas: soluções em que o solvente está no estado gasoso. Exemplo: ar atmosférico.</li>
+	<br>
+	<h2>~ Classificação das soluções quanto à natureza do soluto dissolvido:</h2>
+	<li>Iônica: é a solução que apresenta um soluto de natureza iônica, ou seja, é capaz de sofrer o fenômeno da dissociação ou ionização. Exemplo: cloreto de sódio;</li>
+	<li>Molecular: é a solução que apresenta um soluto de natureza molecular, ou seja, não é capaz de sofrer o fenômeno da dissociação ou ionização. Exemplo: glicose.</li>
+	<br>
+	<h2>~ Classificaçãos das soluções quanto a quantidade de soluto e solvente (Saturação da solução):</h2>
+	<li>Soluções insaturadas: Menos soluto em relação à quantidade de solvente.</li>
+	<li>Soluções saturadas: Máxima quantidade de soluto em determinada quantidade de solvente.</li>
+	<li>Soluções supersaturadas: Maior quantidade de soluto em relação à quantidade de solvente.</li>
+	<li>Soluções supersaturadas com corpo de fundo: Maior quantidade de soluto em relação à quantidade de solvente, só que esse excesso se deposita no fundo do recipiente.</li>
+	<img src="https://www.aplusplatform.com/uploads/586f59d79fe479a073cda8ea" alt="exemplo" style="height: auto; width: auto;">
+	<legend style="text-align: center; font-size:small; ">Exemplo de solução supersaturada, a superssaturação é um estado delicado. Quando perturbado, como mostrado na imagem, desencadeia a deposição</legend>
+	<br>
+	<br/><p>Vou deixar aqui uma simulação para exemplificar:</p>
+	<p>Digite a quantide de <input type="text" id="input1_1" placeholder="Gramas de água" size="30"> e de <input type="text" id="input1_2" placeholder="Gramas de sulfato de sódio (Na2SO4)" size="30"> = Solução <span id="tipo_solu"></span></p>
+	<p><button type="button" name="button" id="botao1">Executar</button></p>
+
+	<h2>~ Concentração ou aspectos quantitativos das soluções</h2>
+	<p>A determinação das quantidades de soluto, solvente, volume, massa ou qualquer outra medida quantitativa relacionada a uma solução é denominada concentração, como nos seguintes casos:</p>
+	<li>Concentração comum: é a relação entre a massa do soluto e o volume da solução;</li>
+	<li>Densidade: é a relação entre a massa e o volume da solução;</li>
+	<li>Título em massa: é a relação entre a massa do soluto e a massa da solução;</li>
+	<li>Título em volume: é a relação entre o volume do soluto e o volume da solução;</li>
+	<li>Ppm: é a relação de uma parte do soluto existente em um milhão de partes da solução;</li>
+	<li>Concentração em mol/L ou molaridade: é a relação entre o número de mol do soluto e o volume da solução;</li>
+	<li>Molalidade: é o número de mols de soluto dissolvido por quilograma (1000 g) de solvente;</li>
+	<li>Fração molar: é a relação entre o número de mol do soluto ou do solvente e o número de mol da solução.</li>
+	<br>
+	<p>A exemplo vamos calcular aqui a Molaridade de sulfato de sódio (Na2SO4) para determinada quantidade de água:</p>
+	<p>Digite <input type="text" id="input2_1" placeholder="Gramas de sulfato de sódio (Na2SO4)" size="30"> e <input type="text" id="input2_2" placeholder="Volume de solução em Litros" size="30">  <button type="button" name="button" id="botao2">Executar</button></p>
+	<p>Esses dois valores serão necessários para a realização do cálculo.</p>
+	<br>
+	<p>Já que estamos calculando molaridade vamos ter que converter de grama para mol: <span id="grama"></span> g -> <span class="mol"></span> mol</p>
+	<p>A fórmula para calcularmos a Molaridade é: Molaridade = Mols do soluto / Volume da solução</p>
+	<p>Adaptando os valores para o nosso caso temos: Molaridade = <span class="mol"></span> / <span class="volume"></span> = <span id="molaridade"></span> mol/L</p>
+	<br>
+	<p>Para verificarmos se apresenta corpo de fundo precisamos saber que em cada 0,1 litro podem ser dissolvidos até  28.1 g de Na2SO4, lembrando que isso é à temperatura ambiente</p>
+	<p>Para <span class="volume"></span> litros podem ser dissolvidos até <span id="possivel"></span> g</p>
+	<p><span id="ha_nao"></span> corpo de fundo nessas condições</p>
+
+	<h2>~ Diluição de soluções</h2>
+	<p>É o procedimento realizado com uma única solução que consiste em adicionar ou retirar (por meio de evaporação ou ebulição) solvente de uma solução preexistente, o que pode resultar em:</p>
+	<li>Adição de solvente a uma solução: a solução passa a apresentar uma concentração menor que a apresentada antes de receber nova quantidade de solvente;</li>
+	<li>Retirada de solvente de uma solução: a solução passa a apresentar uma concentração maior que a apresentada antes de perder certa quantidade de solvente.</li>
+	<br>
+	<h2>~ Mistura de soluções</h2>
+	<p>É o procedimento em que duas ou mais soluções são reunidas em um mesmo recipiente, como nos seguintes casos:</p>
+	<li>Mistura de soluções de mesmo soluto: resulta em uma solução que apresenta um valor de concentração intermediário ao das soluções que foram misturadas;</li>
+	<li>Mistura de soluções de solutos diferentes sem reação química: resulta em uma solução que apresenta novo valor de concentração para cada um dos solutos presentes;</li>
+	<li>Mistura de soluções de solutos diferentes com reação química: resulta em uma solução que apresenta um ou mais solutos diferentes dos que estavam anteriormente nas soluções misturadas.</li>
+	<br>
+	<h1>$ Misturas Homegêneas</h1>
+	<p>Antes de tudo, é preciso definir o que é uma mistura: é formada por duas ou mais substâncias e pode se classificar em mistura homogênea ou heterogênea. A mistura homogênea é uma solução que apresenta uma única fase e a heterogênea pode apresentar duas ou mais fases. Daí pode surgir a dúvida: o que é fase? Fase é cada porção que apresenta aspecto visual uniforme.</p>
+	<p>Podemos citar como exemplo de mistura homogênea, a mistura de água e álcool. Percebe-se a olho nu que esta mistura apresenta uma única fase, porém, é constituída de moléculas de H2O e de C2H6O (álcool). Outro exemplo é o ar que respiramos, é difícil acreditar, mas uma substância invisível aos nossos olhos consiste em uma mistura de nitrogênio, oxigênio e outros gases que apresentam aspecto visual homogêneo.</p>
+	<p>Vamos ver agora quais os métodos que permitem separar as misturas homogêneas:</p>
+	<li>Destilação simples: procedimento empregado na separação de misturas homogêneas compostas por sólido-líquido. A mistura é aquecida até entrar em ebulição e em seguida ocorre uma condensação dos vapores do líquido, este método é usado para separar sal e água.</li>
+	<li>Destilação fracionada: método que se baseia no ponto de vaporização, usado para separar misturas homogêneas líquidas. A destilação do petróleo obedece a este método e cada componente é destilado a uma temperatura diferente.</li>
+	<li>Fusão fracionada: método que se baseia no ponto de fusão dos componentes da mistura, é usado para separar mistura homogênea composta por vários sólidos. Como cada sólido possui um ponto de fusão diferente, basta aquecer a mistura fazendo com que o sólido com ponto de fusão maior escoe, separando-se dos de ponto de fusão menores, como por exemplo, a separação de enxofre e areia que segue este método.</li>
+
+	<br>
+	<p>#Considere "." como delimitador de casas decimais. Caso tente usar "," pode ocasionar erro pois a "," tem outros usos nas linguagens de programação</p>
+	<br><br>
+	<p>Selecionei 3 vídeo sobre esses assuntos de química que achei no canal do Brasil Escola. O primeiro é uma introdução, nada aprofundado. O segundo trata da concentração molar, pro caso de ter ficado alguma dúvida quanto a segunda simulação. E por fim o terceiro vídeo trata do coeficiente de solubilidade, algo que não foi visto no resumo que aqui fizemos. Espero que os vídeos cubram qualquer dúvida restante</p>
+	<h3>Soluções - Brasil Escola</h3>
+	<iframe width="1280" height="544" src="https://www.youtube.com/embed/1JuxCLYJ9PU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+	<h3>Concentração Molar ou Concentração em Mol/L - Brasil Escola</h3>
+	<iframe width="1280" height="544" src="https://www.youtube.com/embed/XKD2OXaQjDg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+	<h3>Coeficiente de Solubilidade - Brasil Escola</h3>
+	<iframe width="1280" height="544" src="https://www.youtube.com/embed/h20w_U3hg5E" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+</section> <!-- end page -->
+
+<div class="texto_preto">
+
+
+
+	<div class="row contact-info" style="">
+
+		<div class="col-four tab-full">
+
+			<div class="icon">
+				<i class="icon-pin"></i>
+			</div>
+
+			<h5>Cidade</h5>
+
+			<p>
+				 Cachoeiras de Macacu<br>
+
+					Rio de Janeiro<br>
+					Brasil
+					</p>
+		</div>
+
+		<div class="col-four tab-full collapse">
+
+			<div class="icon">
+				<i class="icon-mail"></i>
+			</div>
+
+			<h5>Envie um e-mail para</h5>
+
+			<p>cauaproducoes@gmail.com</p>
+
+
+
+
+		</div>
+
+		<div class="col-four tab-full">
+
+			<div class="icon">
+				<i class="icon-phone"></i>
+			</div>
+
+			<h5>Me ligue</h5>
+
+			<p>Telefone:
+				+ 55 21 98398-0404<br>
+
+			 </p>
+
+		</div>
+
+		</div>
+ <footer>
+		<div class="row">
+			<div class="col-six tab-full pull-right social">
+
+								<ul class="footer-social">
+
+									<li><a target="_blank"href="https://api.whatsapp.com/send?phone=5521983980404&text=Ol%C3%A1,%20gostaria%20de%20entrar%20em%20contato."><i class="fa fa-whatsapp" aria-hidden="true"></i>
+									<li><a target="_blank"href="https://professormirim.github.io/"><i class="fa fa-github" aria-hidden="true"></i>
+</a></li>
+							 </ul>
+
+							</div>
+
+				<div id="go-top">
+					 <a class="smoothscroll" title="Back to Top" href="#top"><i class="fa fa-long-arrow-up"></i></a>
+				</div>
+
+			</div> <!-- /row -->
+ </footer>
+
+ <div id="preloader">
+		<div id="loader"></div>
+ </div>
+
+ <!-- Java Script
+ ================================================== -->
+ <script src="js/jquery-2.1.3.min.js"></script>
+ <script src="js/plugins.js"></script>
+ <script src="js/main.js"></script>
+
+</body>
+</html>
