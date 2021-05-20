@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<!--[if IE 8 ]><html class='no-js oldie ie8' lang='pt-br'> <![endif]-->
+<!--[if IE 9 ]><html class='no-js oldie ie9' lang='pt-br'> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html class='no-js' lang='pt-br'> <!--<![endif]-->
+<head>
+
+   <!--- basic page needs
+   ================================================== -->
+   <meta charset='utf-8'>
+	<title>Pasch0</title>
+	<meta name='description' content=''>
+	<meta name='author' content=''>
+
+   <!-- mobile specific metas
+   ================================================== -->
+	<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'>
+
+ 	<!-- CSS -->
+
+   <link rel='stylesheet' href='../css/base.css'>
+
+   <link rel='stylesheet' href='../css/main.css'>
+
+   <link rel='stylesheet' href='../css/vendor.css'>
+
+   <style media='screen'>
+     h2 {
+       color:gray;
+     }
+   </style>
+
+
+   <!-- script -->
+	<script src='js/modernizr.js'></script>
+  <script src="js/pace.min.js"></script>
+
+
+
+  <!--Own Js file for activities-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <script>
+
+    $(function() {
+      //1
+      $('#b1').click(function(){
+        let val1 = $('#n1').val();
+        let val2 = $('#n2').val();
+        let operador = $('#operador').val();
+        var resultado = 0;
+        switch (operador) {
+          case "-":
+          resultado = Number(val1) - Number(val2);
+            break;
+
+          case "+":
+          resultado = Number(val1) + Number(val2);
+            break;
+
+          case "*":
+          resultado = Number(val1) * Number(val2);
+            break;
+
+          case "/":
+          resultado = Number(val1) / Number(val2);
+            break;
+
+          default:
+          resultado = "informe um operador aritimético válido";
+        }
+        $("#r1").text(resultado);
+
+      });
+
+      //2
+      $('#b2').click(function(){
+        let sal = Number($('#sal').val());
+        var aliq = 0;
+        var dedu = 0;
+        var taxa = undefined;
+        if (sal < 0) {
+          alert("insra um valor positivo");
+          taxa = "??";
+        } else if (sal < 1903.98) {
+          //tudo continua 0 mas facilita o codigo dos proximos ifs
+          taxa = tax(sal, aliq, dedu);
+        } else if (sal < 2826.65) {
+          aliq = 7.5/100;
+          dedu = 142.80;
+          taxa = tax(sal, aliq, dedu);
+        } else if (sal < 3751.05) {
+          aliq = 15/100;
+          dedu = 354.80;
+          taxa = tax(sal, aliq, dedu);
+        } else if (sal < 4664.68) {
+          aliq = 22.5/100;
+          dedu = 636.13;
+          taxa = tax(sal, aliq, dedu);
+        } else {
+          aliq = 27.5/100;
+          dedu = 869.36;
+          taxa = tax(sal, aliq, dedu);
+        }
+
+        $("#r2").text(taxa);
+
+        function tax (sal, aliq, dedu) {
+          var val = sal*aliq-dedu;
+          val = Math.round(val * 100) / 100;
+          val = "R$" + val;
+          return val;
+        }
+
+      });
+
+      //3
+      $('#b3').click(function(){
+        let val1 = $('#n1_2').val();
+        let val2 = $('#n2_2').val();
+        let val3 = $('#n3_2').val();
+        console.log(val1 + ", " + val2 + ", " + val3);
+        var resultado = "";
+        if (val1 <= 0 || val2 <= 0 || val3 <= 0 || val1 === "" || val2 === "" || val3 === "") {
+          resultado = "erro";
+        } else if ((val1 == val2 && val1 <= val3-1) || (val1 == val3 && val1 <= val2-1) || (val2 == val3 && val2 <= val1-1)) {
+          resultado = "erro";
+          console.log("aqui");
+        } else {
+          if (val1 == val2 && val2 == val3) {
+            resultado = "Equilateral";
+          }else if (val1 != val2 && val2 != val3 && val3 != val1) {
+            resultado = "Escaleno"
+          } else {
+            resultado = "Isósceles";
+          }
+        }
+
+        $("#r3").text(resultado);
+
+      });
+
+      //4
+      $('#b4').click(function(){
+        let texto = $('#cif').val().toLowerCase();
+        let num = $('#n4').val();
+
+        var referencia = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+        var cifrada = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+
+        while (num > 26) {
+          num-= 26;
+        }
+        for (var i = 0; i < num; i++) {
+          cifrada.pop();
+        }
+        for (var i = 26; i > 26-num; i--) {
+          cifrada.unshift(referencia[i-1]);
+        }
+
+        var text_array = texto.split('');
+
+        for (var i = 0; i < text_array.length; i++) {
+          text_array[i] = cifrada[referencia.indexOf(text_array[i])];
+        }
+        $("#r4").text(text_array.join(""));
+
+      });
+    });
+
+  </script>
+
+	<!-- favicons
+		================================================== -->
+		<link rel='icon' type='image/png' href='favicon.png'>
+
+
+
+	</head>
+
+	<body id='top'>
+
+		<!-- header
+	   ================================================== -->
+	   <header>
+
+		   <!-- Load an icon library to show a hamburger menu (bars) on small screens -->
+		<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+
+		<div class='topnav' id='myTopnav'>
+			<a href='../index.html'><strong>Home</strong></a>
+			<a href='../js_index.html'><strong>JavaScript</strong></a>
+			<a href='../quim_index.html'><strong>Química</strong></a>
+		</div>
+
+
+	   </header> <!-- header -->
+
+		<!-- intro section
+	   ================================================== -->
+
+
+	   <!-- about section
+	   ================================================== -->
+	<br><br>
+		<section style='background-color: white;'>
+	    <br>
+	<h2>>Page Description</h2>
+	<h6 style='text-align: center; color:black;'>Bem vindo ao conteúdo de JavaScript, Selecione algum dos conteúdos disponibilizados na lista abaixo e confira a resolução das atividades propostas na seção 'Sand Box'.</h6>
+	<br>
+	<h2>>Content Index</h2>
+	<ul style='margin-left:10%;'>
+    <li><a href="../Java/rocket_1_2.html">Atividade RocketSeat 1 e 2</a></li>
+    <li><a href="../Java/Atividade_1_(passada_pelo_professor).html">Atividade 1 (passada pelo professor)</a></li>
+    <li><a href="../Java/laboratorio_jquery.html">Atividade Jquery (passada pelo professor)</a></li>
+    <li><a href="../Java/laboratorio_jquery2.html">Atividade Jquery 2 (passada pelo professor)</a></li>
+    <li><a href="../Java/catalogo_filmes/index.html">Catálogo de Filmes e Séries</a></li>
+    <li><a href="../Java/lab_ecmascript6.html">Laboratório de ECMAScript6</a></li>
+    <li><a href="../Java/lab_ecmascript6_2.html">Segundo Laboratório de ECMAScript6</a></li>
+	</ul>
+
+<!--Fake section sandbox-->
+  <br>
+<h2>>SandBox</h2>
+  <h3>Questão 1:</h3>
+  <h4>Digite dois valores e uma operação aritimértico: <span id="Array1"></span></h4>
+  <input type="number" name="n1" id="n1" placeholder="valor 1">
+  <input type="number" name="n2" id="n2" placeholder="valor 2">
+  <input type="text" name="n1" id="operador" placeholder="operador">
+  <button type="button" name="button1" id="b1">Enviar</button>
+  <p>Resultado: <span id="r1"></span></p>
+
+  <h3>Questão 2:</h3>
+  <h4>Insira seu salário e saiba quando deve pagar de imposto de renda:</h4>
+  <input type="number" name="sal" id="sal" placeholder="salario">
+  <button type="button" name="button2" id="b2">Enviar</button>
+  <p>Taxa: <span id="r2"></span></p>
+
+    <h3>Questão 3:</h3>
+    <h4>Digite valores para lados de um tiângulo e descubra seu tipo: <span id="Array1"></span></h4>
+    <input type="number" name="n1_2" id="n1_2" placeholder="valor 1">
+    <input type="number" name="n2_2" id="n2_2" placeholder="valor 2">
+    <input type="number" name="n3_2" id="n3_2" placeholder="valor 3">
+    <button type="button" name="button3" id="b3">Enviar</button>
+    <p>É um triângulo: <span id="r3"></span></p>
+
+    <h3>Questão 4:</h3>
+    <h4>Digite um texto e um número de rotações para codificar um texto: <span id="Array1"></span></h4>
+    <input type="text" name="cif" id="cif" placeholder="texto">
+    <input type="number" name="n4" id="n4" placeholder="Num de caracteres">
+    <button type="button" name="button4" id="b4">Enviar</button>
+    <p>A mensagem fica: <span id="r4"></span></p>
+<!--End of the fake section sandbox-->
+
+
+	</section> <!-- end page -->
+
+
+
+   	<div class="row contact-info">
+
+   		<div class="col-four tab-full">
+
+   			<div class="icon">
+   				<i class="icon-pin"></i>
+   			</div>
+
+   			<h5>Cidade</h5>
+
+   			<p>
+           Cachoeiras de Macacu<br>
+            Rio de Janeiro<br>
+            Brasil
+            </p>
+
+   		</div>
+
+   		<div class="col-four tab-full collapse">
+
+   			<div class="icon">
+   				<i class="icon-mail"></i>
+   			</div>
+
+   			<h5>Envie um e-mail para</h5>
+
+   			<p>cauaproducoes@gmail.com</p>
+
+
+
+
+   		</div>
+
+   		<div class="col-four tab-full">
+
+   			<div class="icon">
+   				<i class="icon-phone"></i>
+   			</div>
+
+   			<h5>Me ligue</h5>
+
+   			<p>Telefone:
+			   	+ 55 21 98398-0404<br>
+
+			   </p>
+
+   	  </div>
+
+
+   <footer>
+     	<div class="row">
+        <div class="col-six tab-full pull-right social">
+
+             			<ul class="footer-social">
+
+                    <li><a target="_blank"href="https://api.whatsapp.com/send?phone=5521983980404&text=Ol%C3%A1,%20gostaria%20de%20entrar%20em%20contato."><i class="fa fa-whatsapp" aria-hidden="true"></i>
+        			      <li><a target="_blank"href="https://professormirim.github.io/"><i class="fa fa-github" aria-hidden="true"></i>
+</a></li>
+        			   </ul>
+
+        	      </div>
+
+	      	<div id="go-top">
+		         <a class="smoothscroll" title="Back to Top" href="#top"><i class="fa fa-long-arrow-up"></i></a>
+		      </div>
+
+        </div> <!-- /row -->
+   </footer>
+
+   <div id="preloader">
+    	<div id="loader"></div>
+   </div>
+
+   <!-- Java Script
+   ================================================== -->
+   <script src="js/jquery-2.1.3.min.js"></script>
+   <script src="js/plugins.js"></script>
+   <script src="js/main.js"></script>
+
+</body>
+
+</html>
