@@ -771,20 +771,36 @@ function buildUsageMap() {
   return usage;
 }
 
-function pickVolunteer(role, usedThisWeek, usageMap) {
+// Fisher-Yates shuffle
+function shuffle(arr) {
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+function pickVolunteer(role, usedThisWeek, usageMap, isEBD=false) {
   const skillName = SKILL_MAP[role];
-  const eligible = DB.volunteers.filter(v=>
-    (v.habilidades||[]).includes(skillName) && !usedThisWeek.has(v.id)
-  );
-  if (!eligible.length) {
-    // fallback: allow reuse if no one else available
-    const fallback = DB.volunteers.filter(v=>(v.habilidades||[]).includes(skillName));
-    if (!fallback.length) return null;
-    fallback.sort((a,b)=>(usageMap[a.id]?.[role]||0)-(usageMap[b.id]?.[role]||0));
-    return fallback[0].id;
+
+  function pickFrom(pool) {
+    if (!pool.length) return null;
+    const minUses = Math.min(...pool.map(v=>(usageMap[v.id]?.[role]||0)));
+    const tied = pool.filter(v=>(usageMap[v.id]?.[role]||0) === minUses);
+    return shuffle(tied)[0].id;
   }
-  eligible.sort((a,b)=>(usageMap[a.id]?.[role]||0)-(usageMap[b.id]?.[role]||0));
-  return eligible[0].id;
+
+  const eligible = DB.volunteers.filter(v=>
+    (v.habilidades||[]).includes(skillName) &&
+    !usedThisWeek.has(v.id) &&
+    (!isEBD || v.podeEBD === true)
+  );
+  if (eligible.length) return pickFrom(eligible);
+
+  // Fallback: allow reuse if no one else available (small teams)
+  const fallback = DB.volunteers.filter(v=>
+    (v.habilidades||[]).includes(skillName) &&
+    (!isEBD || v.podeEBD === true)
+  );
+  return pickFrom(fallback);
 }
 
 function gerarEscala() {
@@ -812,8 +828,10 @@ function gerarEscala() {
       return cntA-cntB;
     });
 
+    const isEBD = d.key === 'ebd-dom';
+
     activeSlots.forEach(role=>{
-      const picked = pickVolunteer(role, usedThisWeek, usageMap);
+      const picked = pickVolunteer(role, usedThisWeek, usageMap, isEBD);
       slots[role] = picked;
       if (picked) {
         usedThisWeek.add(picked);
@@ -1116,11 +1134,14 @@ function renderVols() {
       if(h==='Iluminação') return '<span class="badge badge-il">💡 Iluminação</span>';
       return `<span class="badge">${esc(h)}</span>`;
     }).join(' ');
+    const ebdBadge = v.podeEBD
+      ? '<span class="badge" style="background:rgba(188,140,255,.15);color:#BC8CFF;margin-left:4px;">📖 EBD</span>'
+      : '';
     return `<div class="vol-item">
       <div class="vol-av">${ini}</div>
       <div class="vol-info">
         <div class="vol-name">${esc(v.nome)}</div>
-        <div class="vol-roles" style="margin-top:5px;">${habs||'<span style="color:var(--ink3);font-size:12px;">Sem habilidades</span>'}</div>
+        <div class="vol-roles" style="margin-top:5px;">${habs||'<span style="color:var(--ink3);font-size:12px;">Sem habilidades</span>'}${ebdBadge}</div>
       </div>
     </div>`;
   }).join('');
@@ -1153,7 +1174,8 @@ async function loadEquipeJSON() {
     DB.volunteers = data.map(v=>({
       id: v.id || uid(),
       nome: v.nome,
-      habilidades: (v.habilidades||[]).filter(h=>['Datashow','Live','Iluminação'].includes(h))
+      habilidades: (v.habilidades||[]).filter(h=>['Datashow','Live','Iluminação'].includes(h)),
+      podeEBD: v.podeEBD === true
     }));
     equipeSource='json';
     saveDB();
@@ -1182,20 +1204,22 @@ function montarPromptEquipe() {
 Formato de saída: um array de objetos, cada um com as chaves:
 - "nome": string com o nome completo da pessoa
 - "habilidades": array contendo qualquer combinação de "Datashow", "Live", "Iluminação" (exatamente estes nomes, com acentuação)
+- "podeEBD": booleano true ou false — true se a pessoa pertence à faixa etária que pode servir na EBD (Escola Bíblica Dominical), false caso contrário
 
 Regras:
 - Não incluas a chave "id".
 - Se uma pessoa não tiver nenhuma habilidade clara no texto, deixa o array "habilidades" vazio.
+- Se não houver informação clara sobre EBD, deixa "podeEBD": false por defeito.
 - Retorna APENAS o JSON puro, sem texto explicativo, sem comentários, sem blocos de código (sem \`\`\`).
 
 Exemplo de saída esperada:
 [
-  {"nome": "João Silva", "habilidades": ["Datashow", "Live"]},
-  {"nome": "Maria Santos", "habilidades": ["Iluminação"]}
+  {"nome": "João Silva", "habilidades": ["Datashow", "Live"], "podeEBD": true},
+  {"nome": "Maria Santos", "habilidades": ["Iluminação"], "podeEBD": false}
 ]
 
 Texto com a equipa:
-[Cola aqui a lista de nomes e habilidades, por exemplo: "João Silva sabe mexer no Datashow e na transmissão Live. Maria Santos só faz Iluminação. Pedro Costa faz tudo."]`;
+[Cola aqui a lista de nomes e habilidades, indicando também quem pode ou não servir na EBD]`;
 }
 
 // ════════════════════════════════════════════
