@@ -1,50 +1,62 @@
 [
 {
 "nome": "Cauã",
-"habilidades": ["Datashow", "Live"]
+"habilidades": ["Datashow", "Live"],
+"podeEBD": false
 },
 {
 "nome": "Giulia",
-"habilidades": ["Datashow", "Live"]
+"habilidades": ["Datashow", "Live"],
+"podeEBD": false
 },
 {
-"nome": "alan",
-"habilidades": ["Datashow", "Live"]
+"nome": "Alan",
+"habilidades": ["Datashow", "Live"],
+"podeEBD": true
 },
 {
 "nome": "Almir",
-"habilidades": ["Datashow", "Live"]
+"habilidades": ["Datashow", "Live"],
+"podeEBD": false
 },
 {
 "nome": "Gabriel Serpa",
-"habilidades": ["Datashow", "Live"]
+"habilidades": ["Datashow", "Live"],
+"podeEBD": false
 },
 {
 "nome": "Guilherme",
-"habilidades": ["Datashow", "Live"]
+"habilidades": ["Datashow", "Live"],
+"podeEBD": false
 },
 {
 "nome": "Gustavo",
-"habilidades": ["Datashow", "Live", "Iluminação"]
+"habilidades": ["Datashow", "Live", "Iluminação"],
+"podeEBD": false
 },
 {
 "nome": "lívia",
-"habilidades": ["Datashow", "Live"]
+"habilidades": ["Datashow", "Live"],
+"podeEBD": false
 },
 {
 "nome": "pedro",
-"habilidades": ["Datashow", "Live"]
+"habilidades": ["Datashow", "Live"],
+"podeEBD": false
 },
 {
 "nome": "Stella",
-"habilidades": ["Datashow", "Live"]
+"habilidades": ["Datashow", "Live"],
+"podeEBD": false
 },
 {
 "nome": "Thayna",
-"habilidades": ["Datashow", "Live"]
+"habilidades": ["Datashow", "Live"],
+"podeEBD": true
 },
 {
 "nome": "Yan",
-"habilidades": ["Datashow", "Live"]
+"habilidades": ["Datashow", "Live"],
+"podeEBD": false
 }
 ]
