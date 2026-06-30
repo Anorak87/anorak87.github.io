@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="theme-color" content="#0D1117"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Escala"/>
+<title>Escala da Equipa</title>
+<style>
+/* ─── TOKENS ─────────────────────────────────────── */
+:root {
+  --bg:       #0D1117;
+  --s1:       #161B22;
+  --s2:       #1C2333;
+  --s3:       #21293A;
+  --border:   #30363D;
+  --border2:  #3D4E63;
+
+  --ink:      #E6EDF3;
+  --ink2:     #8B949E;
+  --ink3:     #4A5568;
+
+  --blue:     #58A6FF;
+  --blue-bg:  rgba(88,166,255,.12);
+  --green:    #3FB950;
+  --green-bg: rgba(63,185,80,.12);
+  --amber:    #D29922;
+  --amber-bg: rgba(210,153,34,.12);
+  --purple:   #BC8CFF;
+  --purple-bg:rgba(188,140,255,.12);
+  --red:      #F85149;
+  --red-bg:   rgba(248,81,73,.12);
+
+  --r:  12px;
+  --rs: 8px;
+  --rx: 6px;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --nav-h:  60px;
+}
+
+/* ─── BASE ────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100%;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+}
+button { font-family: inherit; cursor: pointer; }
+input, select, textarea { font-family: inherit; }
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 99px; }
+
+/* ─── LAYOUT ──────────────────────────────────────── */
+#app {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  position: relative;
+}
+
+.page {
+  display: none;
+  padding: 0 14px calc(var(--nav-h) + var(--safe-b) + 16px);
+  animation: pgIn .18s ease;
+}
+.page.active { display: block; }
+@keyframes pgIn { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:none; } }
+
+/* ─── PAGE HEADER ─────────────────────────────────── */
+.ph {
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 40;
+  padding: 52px 0 12px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+.ph-row { display:flex; align-items:flex-end; justify-content:space-between; gap:8px; }
+.ph h1 { font-size: 22px; font-weight: 700; letter-spacing: -.4px; line-height: 1; }
+.ph h1 em { font-style:normal; color: var(--blue); }
+.ph-sub { font-size: 12px; color: var(--ink3); margin-top: 4px; font-weight:500; }
+
+/* ─── BOTTOM NAV ──────────────────────────────────── */
+.bnav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  background: var(--s1);
+  border-top: 1px solid var(--border);
+  display: flex;
+  height: calc(var(--nav-h) + var(--safe-b));
+  padding-bottom: var(--safe-b);
+  z-index: 100;
+}
+.nb {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: var(--ink3);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .3px;
+  text-transform: uppercase;
+  transition: color .15s;
+  padding: 8px 0 4px;
+}
+.nb svg { width:20px; height:20px; stroke-width:1.8; }
+.nb.on { color: var(--blue); }
+.nb-pip { width:4px; height:4px; border-radius:99px; background:var(--blue); margin:0 auto; display:none; }
+.nb.on .nb-pip { display:block; }
+
+/* ─── CARDS ───────────────────────────────────────── */
+.card {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  margin-bottom: 10px;
+}
+.card-body { padding: 14px; }
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.card-title { font-size: 11px; font-weight: 700; color: var(--ink2); text-transform: uppercase; letter-spacing: .7px; }
+
+/* ─── FORMS ───────────────────────────────────────── */
+.field { margin-bottom: 12px; }
+.field:last-child { margin-bottom: 0; }
+.lbl {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink2);
+  letter-spacing: .4px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.inp, .sel, .ta {
+  width: 100%;
+  background: var(--s2);
+  border: 1px solid var(--border);
+  border-radius: var(--rs);
+  color: var(--ink);
+  font-size: 15px;
+  padding: 10px 12px;
+  outline: none;
+  transition: border-color .15s;
+}
+.inp:focus, .sel:focus, .ta:focus { border-color: var(--blue); }
+.ta { resize: vertical; min-height: 80px; line-height: 1.5; font-size: 13px; }
+.sel option { background: var(--s2); }
+.inp::placeholder, .ta::placeholder { color: var(--ink3); }
+
+/* ─── PILL CHECKBOXES ─────────────────────────────── */
+.pill-row { display:flex; flex-wrap:wrap; gap:7px; }
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  background: var(--s2);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink2);
+  cursor: pointer;
+  transition: all .15s;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.pill input { display:none; }
+.pill.on { background: var(--blue-bg); border-color: var(--blue); color: var(--blue); }
+.pill.on-g { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+.pill.on-a { background: var(--amber-bg); border-color: var(--amber); color: var(--amber); }
+.pill.on-p { background: var(--purple-bg); border-color: var(--purple); color: var(--purple); }
+
+/* ─── BUTTONS ─────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  border: none; border-radius: var(--rs); font-weight: 600; font-size: 14px;
+  padding: 11px 16px; cursor: pointer; transition: all .13s; white-space: nowrap;
+}
+.btn:active { transform: scale(.97); }
+.btn svg { width:15px; height:15px; flex-shrink:0; stroke-width:2.2; }
+.btn-primary   { background: var(--blue); color: #fff; }
+.btn-primary:hover { background: #79B8FF; }
+.btn-success   { background: var(--green); color: #fff; }
+.btn-ghost     { background: transparent; color: var(--ink2); border: 1px solid var(--border); }
+.btn-ghost:hover { border-color: var(--border2); color: var(--ink); }
+.btn-danger    { background: var(--red-bg); color: var(--red); border: 1px solid rgba(248,81,73,.3); }
+.btn-full      { width: 100%; }
+.btn-sm        { padding: 7px 11px; font-size: 12px; border-radius: var(--rx); }
+.btn-icon      { padding: 7px; border-radius: var(--rx); }
+
+/* ─── BADGES ──────────────────────────────────────── */
+.badge {
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 2px 7px; border-radius: 99px; font-size: 11px; font-weight: 600;
+}
+.badge-ds { background: var(--blue-bg);   color: var(--blue); }
+.badge-lv { background: var(--green-bg);  color: var(--green); }
+.badge-il { background: var(--amber-bg);  color: var(--amber); }
+
+/* ─── WEEK BUILDER ────────────────────────────────── */
+.week-selector { margin-bottom: 14px; }
+.week-sel-label { font-size:11px; font-weight:700; color:var(--ink2); text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px; }
+
+.day-block {
+  background: var(--s2);
+  border: 1px solid var(--border);
+  border-radius: var(--rs);
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+.day-block-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.day-block-head:active { background: var(--s3); }
+.day-toggle { flex:1; display:flex; align-items:center; gap:10px; }
+.day-name { font-size: 14px; font-weight: 600; }
+.day-tag { font-size: 10px; font-weight:700; padding:2px 7px; border-radius:99px; text-transform:uppercase; letter-spacing:.4px; }
+.day-tag.ebd  { background:var(--purple-bg); color:var(--purple); }
+.day-tag.sab  { background:var(--amber-bg); color:var(--amber); }
+.day-tag.dom  { background:var(--blue-bg); color:var(--blue); }
+
+/* slot toggle inside day */
+.day-slots { padding: 0 12px 12px; display:flex; flex-direction:column; gap:6px; }
+.slot-toggle {
+  display: flex; align-items:center; justify-content:space-between;
+  background: var(--s1); border: 1px solid var(--border);
+  border-radius: var(--rx); padding: 9px 12px; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.slot-toggle .slot-name { font-size:13px; font-weight:600; display:flex; align-items:center; gap:7px; }
+.sw { width:36px; height:20px; border-radius:99px; background:var(--border); position:relative; flex-shrink:0; transition:background .15s; }
+.sw::after { content:''; position:absolute; left:2px; top:2px; width:16px; height:16px; border-radius:50%; background:#fff; transition:transform .15s; }
+.sw.on { background: var(--green); }
+.sw.on::after { transform:translateX(16px); }
+
+/* ─── SCHEDULE RESULT ─────────────────────────────── */
+.sched-day {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: var(--rs);
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+.sched-day-head {
+  display: flex; align-items:center; gap:8px;
+  padding: 10px 13px;
+  background: var(--s2);
+  border-bottom: 1px solid var(--border);
+}
+.sched-day-name { font-size:14px; font-weight:700; }
+.sched-slots { padding: 10px 13px; display:flex; flex-direction:column; gap:8px; }
+.sched-slot { display:flex; align-items:center; gap:10px; }
+.sched-slot-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+.sched-slot-icon.ds { background:var(--blue-bg); }
+.sched-slot-icon.lv { background:var(--green-bg); }
+.sched-slot-icon.il { background:var(--amber-bg); }
+.sched-slot-info { flex:1; min-width:0; }
+.sched-slot-role { font-size:10px; font-weight:700; color:var(--ink3); text-transform:uppercase; letter-spacing:.5px; }
+.sched-slot-person { font-size:14px; font-weight:600; margin-top:1px; }
+.sched-slot-person.empty { color:var(--ink3); font-style:italic; font-weight:400; }
+.sched-slot-action { flex-shrink:0; }
+.swap-sel {
+  background: var(--s3); border: 1px solid var(--border2);
+  border-radius: var(--rx); color: var(--ink); font-size:12px;
+  padding: 5px 8px; outline:none; max-width:120px;
+}
+.swap-sel:focus { border-color: var(--blue); }
+
+/* ─── HISTORY ─────────────────────────────────────── */
+.hist-week {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: var(--rs);
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+.hist-week-head {
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 10px 13px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.hist-week-head:active { background: var(--s2); }
+.hist-week-title { font-size:14px; font-weight:700; }
+.hist-week-sub { font-size:11px; color:var(--ink3); margin-top:2px; }
+.hist-week-body { display:none; padding:0 13px 12px; border-top:1px solid var(--border); }
+.hist-week-body.open { display:block; }
+.hist-day-row { padding: 9px 0; border-bottom:1px solid var(--border); }
+.hist-day-row:last-child { border-bottom:none; }
+.hist-day-label { font-size:12px; font-weight:700; color:var(--ink2); margin-bottom:6px; display:flex; align-items:center; gap:6px; }
+.hist-slots { display:flex; flex-direction:column; gap:5px; }
+.hist-slot { display:flex; align-items:center; gap:8px; }
+.hist-slot-icon { width:26px; height:26px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0; }
+.hist-slot-role { font-size:10px; font-weight:700; color:var(--ink3); text-transform:uppercase; letter-spacing:.4px; width:58px; flex-shrink:0; }
+.hist-slot-person { font-size:13px; font-weight:600; flex:1; }
+.hist-slot-person.empty { color:var(--ink3); font-style:italic; font-weight:400; font-size:12px; }
+.hist-swap { background:var(--s3); border:1px solid var(--border); border-radius:6px; color:var(--ink); font-size:11px; padding:4px 7px; outline:none; }
+
+/* ─── VOLUNTEERS ──────────────────────────────────── */
+.vol-item {
+  display:flex; align-items:center; gap:10px;
+  background: var(--s1); border:1px solid var(--border);
+  border-radius: var(--rs); padding: 11px 12px; margin-bottom:7px;
+}
+.vol-av {
+  width:36px; height:36px; border-radius:50%;
+  background: linear-gradient(135deg,#3D63DD,#9B5DFF);
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:800; color:#fff; flex-shrink:0; letter-spacing:-.5px;
+}
+.vol-info { flex:1; min-width:0; }
+.vol-name { font-size:14px; font-weight:700; }
+.vol-roles { margin-top:4px; }
+.vol-acts { display:flex; gap:5px; }
+
+/* ─── MODAL ───────────────────────────────────────── */
+.overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,.75);
+  z-index:200; display:none; align-items:flex-end; justify-content:center;
+  backdrop-filter: blur(3px);
+}
+.overlay.open { display:flex; animation:ov .2s ease; }
+@keyframes ov { from{opacity:0} to{opacity:1} }
+.modal {
+  background:var(--s1); border:1px solid var(--border);
+  border-radius: var(--r) var(--r) 0 0;
+  width:100%; max-width:480px;
+  padding: 16px 18px calc(20px + var(--safe-b));
+  max-height:88vh; overflow-y:auto;
+  animation: mup .22s cubic-bezier(.32,.72,0,1);
+}
+@keyframes mup { from{transform:translateY(30px);opacity:0} to{transform:none;opacity:1} }
+.modal-handle { width:32px; height:4px; background:var(--border2); border-radius:99px; margin:0 auto 16px; }
+.modal h2 { font-size:17px; font-weight:700; margin-bottom:14px; letter-spacing:-.3px; }
+
+/* ─── EMPTY ───────────────────────────────────────── */
+.empty { text-align:center; padding:40px 20px; color:var(--ink3); }
+.empty-ico { font-size:40px; margin-bottom:12px; }
+.empty h3 { font-size:15px; font-weight:700; color:var(--ink2); margin-bottom:6px; }
+.empty p { font-size:13px; line-height:1.5; }
+
+/* ─── TOAST ───────────────────────────────────────── */
+.toast {
+  position:fixed; top:56px; left:50%;
+  transform:translateX(-50%) translateY(-8px);
+  background:var(--s3); border:1px solid var(--border2);
+  border-radius:99px; padding:9px 18px;
+  font-size:13px; font-weight:600; z-index:999;
+  opacity:0; transition:all .25s; pointer-events:none;
+  white-space:nowrap; max-width:90vw;
+  box-shadow:0 4px 24px rgba(0,0,0,.5);
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.toast.ok  { color:var(--green); border-color:rgba(63,185,80,.4); }
+.toast.err { color:var(--red);   border-color:rgba(248,81,73,.4); }
+.toast.inf { color:var(--blue);  border-color:rgba(88,166,255,.4); }
+
+/* ─── MISC ────────────────────────────────────────── */
+.sep { border:none; border-top:1px solid var(--border); margin:14px 0; }
+.sec-lbl { font-size:11px; font-weight:700; color:var(--ink3); text-transform:uppercase; letter-spacing:.7px; margin:18px 0 8px; }
+.row { display:flex; gap:8px; }
+.row .btn { flex:1; }
+.chevron { transition:transform .2s; display:inline-block; }
+.chevron.open { transform:rotate(180deg); }
+.count-chip {
+  background:var(--s2); border:1px solid var(--border);
+  border-radius:99px; padding:3px 10px; font-size:12px; font-weight:600; color:var(--ink2);
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ══════════ PAGE: ESCALA ══════════ -->
+  <div class="page active" id="pg-escala">
+    <div class="ph">
+      <div class="ph-row">
+        <div>
+          <h1>⛪ <em>Escala</em></h1>
+          <div class="ph-sub" id="ph-week-label">Semana atual</div>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-ghost btn-sm" onclick="openModal('mo-import')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Import
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Week date picker -->
+    <div class="card" style="margin-bottom:10px;">
+      <div class="card-body">
+        <div class="field">
+          <label class="lbl">Semana de referência</label>
+          <input type="week" class="inp" id="inp-week-date" onchange="onWeekDateChange()"/>
+        </div>
+
+        <div class="week-sel-label">Dias desta semana</div>
+        <div id="day-builder"></div>
+
+        <button class="btn btn-primary btn-full" style="margin-top:6px;" onclick="gerarEscala()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Gerar Escala Automática
+        </button>
+      </div>
+    </div>
+
+    <!-- Result preview -->
+    <div id="result-section" style="display:none;">
+      <div class="sec-lbl">Prévia da escala</div>
+      <div id="result-days"></div>
+      <div class="row" style="margin-bottom:8px;">
+        <button class="btn btn-success" onclick="salvarEscala()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Salvar
+        </button>
+        <button class="btn btn-ghost" onclick="copiarWhatsAppPending()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+          WhatsApp
+        </button>
+      </div>
+      <button class="btn btn-ghost btn-full btn-sm" onclick="descartarEscala()">Descartar</button>
+    </div>
+  </div>
+
+  <!-- ══════════ PAGE: HISTÓRICO ══════════ -->
+  <div class="page" id="pg-hist">
+    <div class="ph">
+      <div class="ph-row">
+        <div>
+          <h1>📋 <em>Histórico</em></h1>
+          <div class="ph-sub" id="ph-hist-sub">0 semanas</div>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-ghost btn-sm" onclick="exportarDados()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Export
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="hist-list"></div>
+  </div>
+
+  <!-- ══════════ PAGE: VOLUNTÁRIOS ══════════ -->
+  <div class="page" id="pg-vol">
+    <div class="ph">
+      <div class="ph-row">
+        <div>
+          <h1>🙌 <em>Equipa</em></h1>
+          <div class="ph-sub" id="ph-vol-sub">0 voluntários</div>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-ghost btn-sm" onclick="abrirPromptModal()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Gerar equipe.json
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="vol-source-banner"></div>
+    <div id="vol-list"></div>
+  </div>
+
+  <!-- ══════════ BOTTOM NAV ══════════ -->
+  <nav class="bnav">
+    <button class="nb on" id="nb-escala" onclick="goPage('escala')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Escala
+      <span class="nb-pip"></span>
+    </button>
+    <button class="nb" id="nb-hist" onclick="goPage('hist')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      Histórico
+      <span class="nb-pip"></span>
+    </button>
+    <button class="nb" id="nb-vol" onclick="goPage('vol')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      Equipa
+      <span class="nb-pip"></span>
+    </button>
+  </nav>
+</div>
+
+<!-- ══════════ MODALS ══════════ -->
+
+<!-- Gerar equipe.json via IA -->
+<div class="overlay" id="mo-prompt">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h2>Gerar equipe.json via IA</h2>
+    <p style="font-size:13px;color:var(--ink2);line-height:1.6;margin-bottom:14px;">
+      1. Copia o prompt abaixo<br/>
+      2. Cola numa IA (ChatGPT, Claude, etc.) seguido do texto livre com os nomes e habilidades da equipa<br/>
+      3. A IA devolve um JSON pronto<br/>
+      4. Salva esse conteúdo como <strong>equipe.json</strong> na mesma pasta deste arquivo HTML, no repositório<br/>
+      5. Atualiza a página — a equipa carrega automaticamente
+    </p>
+    <button class="btn btn-secondary btn-full" style="margin-bottom:14px;" onclick="copiarPromptEquipe()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      Copiar Prompt
+    </button>
+    <div class="field">
+      <label class="lbl">Prévia do prompt</label>
+      <textarea class="ta" readonly style="min-height:160px;font-family:monospace;font-size:11.5px;color:var(--ink2);" id="ta-prompt-preview"></textarea>
+    </div>
+    <button class="btn btn-ghost btn-full" onclick="closeModal('mo-prompt')">Fechar</button>
+  </div>
+</div>
+
+<!-- Import JSON -->
+<div class="overlay" id="mo-import">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h2>Importar dados</h2>
+    <p style="font-size:13px;color:var(--ink2);line-height:1.5;margin-bottom:14px;">Cola aqui o JSON exportado anteriormente para restaurar voluntários e histórico de escalas.</p>
+    <div class="field">
+      <label class="lbl">JSON</label>
+      <textarea class="ta" id="ta-import" placeholder='{"volunteers":[...],"history":[...]}' style="min-height:140px;font-family:monospace;font-size:12px;"></textarea>
+    </div>
+    <div class="row">
+      <button class="btn btn-success" onclick="importarDados()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+        Importar
+      </button>
+      <button class="btn btn-ghost" onclick="closeModal('mo-import')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════
+let DB = {
+  volunteers: [],   // {id, nome, habilidades:[]}
+  history: []       // {id, weekLabel, weekStart, days:[{dayKey, slots:{ds,lv,il}}]}
+};
+
+// Pending generated schedule before saving
+let pendingSchedule = null;
+
+// Day definitions: {key, label, tag, tagClass, dow} — Sunday first, descending to Monday
+const DAY_DEFS = [
+  { key:'ebd-dom',   label:'Domingo',      tag:'EBD',   tagClass:'ebd', dow:0 },
+  { key:'culto-dom', label:'Domingo',      tag:'Culto', tagClass:'dom', dow:0 },
+  { key:'sab',       label:'Sábado',       tag:'Culto', tagClass:'sab', dow:6 },
+  { key:'sex',       label:'Sexta-feira',  tag:'Culto', tagClass:'sab', dow:5 },
+  { key:'qui',       label:'Quinta-feira', tag:'Culto', tagClass:'sab', dow:4 },
+  { key:'qua',       label:'Quarta-feira', tag:'Culto', tagClass:'sab', dow:3 },
+  { key:'ter',       label:'Terça-feira',  tag:'Culto', tagClass:'sab', dow:2 },
+  { key:'seg',       label:'Segunda-feira',tag:'Culto', tagClass:'sab', dow:1 },
+];
+
+// Per-day slot config: which slots are on by default
+const DEFAULT_SLOTS = { ds:true, lv:false, il:false };
+
+// State for the day builder
+let dayConfig = {}; // { [dayKey]: { enabled:bool, slots:{ds,lv,il} } }
+
+// ════════════════════════════════════════════
+//  PERSIST
+// ════════════════════════════════════════════
+function loadDB() {
+  try { DB = JSON.parse(localStorage.getItem('escala-db') || 'null') || DB; } catch(e){}
+}
+function saveDB() {
+  localStorage.setItem('escala-db', JSON.stringify(DB));
+}
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+// ════════════════════════════════════════════
+//  NAVIGATION
+// ════════════════════════════════════════════
+function goPage(id) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('pg-'+id).classList.add('active');
+  document.getElementById('nb-'+id).classList.add('on');
+  if (id==='vol')  renderVols();
+  if (id==='hist') renderHist();
+}
+
+// ════════════════════════════════════════════
+//  MODALS
+// ════════════════════════════════════════════
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow='';
+}
+document.querySelectorAll('.overlay').forEach(el=>{
+  el.addEventListener('click', e=>{ if(e.target===el) closeModal(el.id); });
+});
+
+// ════════════════════════════════════════════
+//  TOAST
+// ════════════════════════════════════════════
+function toast(msg, type='inf') {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast show '+type;
+  clearTimeout(t._t); t._t=setTimeout(()=>t.className='toast',2800);
+}
+
+// ════════════════════════════════════════════
+//  WEEK DATE
+// ════════════════════════════════════════════
+function getSunday(d) {
+  // Sunday that starts the week containing d (week = Sun..Sat)
+  const dt=new Date(d); const day=dt.getDay();
+  dt.setDate(dt.getDate()-day); return dt;
+}
+function fmtDate(d) {
+  return d.toLocaleDateString('pt-PT',{day:'2-digit',month:'2-digit',year:'numeric'});
+}
+function fmtDateISO(d) {
+  return d.toISOString().split('T')[0];
+}
+function weekLabel(isoSunday) {
+  const sun=new Date(isoSunday+'T12:00:00');
+  const sat=new Date(sun); sat.setDate(sun.getDate()+6);
+  return `${fmtDate(sun)} – ${fmtDate(sat)}`;
+}
+
+// Convert an ISO-week string "YYYY-Www" (from <input type=week>) to the ISO date
+// of the Sunday that starts that week (our weeks run Sun..Sat).
+// ISO week's Monday is computed per the ISO-8601 standard, then we take the
+// Sunday that *precedes* it minus 7, i.e. the Sunday 1 day before that Monday
+// plus a full week back — concretely: ISO Monday's preceding Sunday IS our week start.
+function isoWeekStringToSunday(weekStr) {
+  if (!weekStr) return null;
+  const [yearStr, wStr] = weekStr.split('-W');
+  const year = parseInt(yearStr,10);
+  const week = parseInt(wStr,10);
+  const jan4 = new Date(year,0,4);
+  const jan4Day = jan4.getDay()===0?7:jan4.getDay();
+  const isoWeek1Monday = new Date(jan4);
+  isoWeek1Monday.setDate(jan4.getDate()-(jan4Day-1));
+  const targetMonday = new Date(isoWeek1Monday);
+  targetMonday.setDate(isoWeek1Monday.getDate()+(week-1)*7);
+  const sunday = new Date(targetMonday);
+  sunday.setDate(targetMonday.getDate()-1);
+  return fmtDateISO(sunday);
+}
+
+// Convert an ISO date string to the <input type=week> value ("YYYY-Www") it falls in
+function dateToIsoWeekString(isoDate) {
+  const d = new Date(isoDate+'T12:00:00');
+  const tmp = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const dayNum = (tmp.getDay()+6)%7; // Mon=0..Sun=6
+  tmp.setDate(tmp.getDate()-dayNum+3); // Thursday of this ISO week
+  const firstThursday = new Date(tmp.getFullYear(),0,4);
+  const firstThursdayDay=(firstThursday.getDay()+6)%7;
+  firstThursday.setDate(firstThursday.getDate()-firstThursdayDay+3);
+  const weekNum = 1 + Math.round((tmp-firstThursday)/(7*24*3600*1000));
+  return `${tmp.getFullYear()}-W${String(weekNum).padStart(2,'0')}`;
+}
+
+function onWeekDateChange() {
+  const v=document.getElementById('inp-week-date').value;
+  if (!v) return;
+  const sunday = isoWeekStringToSunday(v);
+  document.getElementById('ph-week-label').textContent = weekLabel(sunday);
+}
+
+// ════════════════════════════════════════════
+//  DAY BUILDER
+// ════════════════════════════════════════════
+function initDayConfig() {
+  DAY_DEFS.forEach(d=>{
+    if (!dayConfig[d.key]) {
+      dayConfig[d.key]={ enabled: d.key==='culto-dom', slots:{...DEFAULT_SLOTS} };
+    }
+  });
+}
+
+function renderDayBuilder() {
+  const el=document.getElementById('day-builder');
+  el.innerHTML = DAY_DEFS.map(d=>{
+    const cfg=dayConfig[d.key];
+    const slotsHtml = cfg.enabled ? `
+      <div class="day-slots">
+        ${slotToggleHtml(d.key,'ds','🖥','Datashow','ds')}
+        ${slotToggleHtml(d.key,'lv','🎥','Live','lv')}
+        ${slotToggleHtml(d.key,'il','💡','Iluminação','il')}
+      </div>` : '';
+    return `<div class="day-block" id="db-${d.key}">
+      <div class="day-block-head" onclick="toggleDay('${d.key}')">
+        <div class="day-toggle">
+          <span class="day-name">${d.label}</span>
+          <span class="day-tag ${d.tagClass}">${d.tag}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="sw ${cfg.enabled?'on':''}" id="sw-day-${d.key}"></div>
+        </div>
+      </div>
+      <div id="ds-slots-${d.key}">${slotsHtml}</div>
+    </div>`;
+  }).join('');
+}
+
+function slotToggleHtml(dayKey, slotKey, icon, label, cls) {
+  const on=dayConfig[dayKey].slots[slotKey];
+  return `<div class="slot-toggle" onclick="toggleSlot('${dayKey}','${slotKey}')">
+    <span class="slot-name"><span class="badge badge-${cls}">${icon} ${label}</span></span>
+    <div class="sw ${on?'on':''}" id="sw-slot-${dayKey}-${slotKey}"></div>
+  </div>`;
+}
+
+function toggleDay(key) {
+  dayConfig[key].enabled = !dayConfig[key].enabled;
+  renderDayBuilder();
+}
+
+function toggleSlot(dayKey, slotKey) {
+  dayConfig[dayKey].slots[slotKey] = !dayConfig[dayKey].slots[slotKey];
+  document.getElementById(`sw-slot-${dayKey}-${slotKey}`).className =
+    'sw'+(dayConfig[dayKey].slots[slotKey]?' on':'');
+}
+
+// ════════════════════════════════════════════
+//  SCHEDULE GENERATION ALGORITHM
+//  Rodízio justo + sem repetição na mesma semana
+// ════════════════════════════════════════════
+const SKILL_MAP = { ds:'Datashow', lv:'Live', il:'Iluminação' };
+
+function buildUsageMap() {
+  // Count how many times each volunteer was in each role across all history
+  const usage = {}; // {volId: {ds:0,lv:0,il:0}}
+  DB.volunteers.forEach(v=>{ usage[v.id]={ds:0,lv:0,il:0}; });
+  DB.history.forEach(week=>{
+    (week.days||[]).forEach(day=>{
+      Object.entries(day.slots||{}).forEach(([role, volId])=>{
+        if (volId && usage[volId]) usage[volId][role]=(usage[volId][role]||0)+1;
+      });
+    });
+  });
+  return usage;
+}
+
+function pickVolunteer(role, usedThisWeek, usageMap) {
+  const skillName = SKILL_MAP[role];
+  const eligible = DB.volunteers.filter(v=>
+    (v.habilidades||[]).includes(skillName) && !usedThisWeek.has(v.id)
+  );
+  if (!eligible.length) {
+    // fallback: allow reuse if no one else available
+    const fallback = DB.volunteers.filter(v=>(v.habilidades||[]).includes(skillName));
+    if (!fallback.length) return null;
+    fallback.sort((a,b)=>(usageMap[a.id]?.[role]||0)-(usageMap[b.id]?.[role]||0));
+    return fallback[0].id;
+  }
+  eligible.sort((a,b)=>(usageMap[a.id]?.[role]||0)-(usageMap[b.id]?.[role]||0));
+  return eligible[0].id;
+}
+
+function gerarEscala() {
+  const weekVal=document.getElementById('inp-week-date').value;
+  if (!weekVal) { toast('Seleciona a semana primeiro','err'); return; }
+  const dateVal = isoWeekStringToSunday(weekVal);
+  if (!DB.volunteers.length) { toast('Adiciona voluntários primeiro','err'); return; }
+
+  const activeDays = DAY_DEFS.filter(d=>dayConfig[d.key].enabled);
+  if (!activeDays.length) { toast('Ativa pelo menos um dia','err'); return; }
+
+  const usageMap = buildUsageMap();
+  const usedThisWeek = new Set();
+  const days = [];
+
+  for (const d of activeDays) {
+    const cfg = dayConfig[d.key];
+    const slots = {};
+    const activeSlots = Object.entries(cfg.slots).filter(([,on])=>on).map(([k])=>k);
+
+    // Sort slots by scarcity (fewer eligible volunteers first)
+    activeSlots.sort((a,b)=>{
+      const cntA = DB.volunteers.filter(v=>(v.habilidades||[]).includes(SKILL_MAP[a])).length;
+      const cntB = DB.volunteers.filter(v=>(v.habilidades||[]).includes(SKILL_MAP[b])).length;
+      return cntA-cntB;
+    });
+
+    activeSlots.forEach(role=>{
+      const picked = pickVolunteer(role, usedThisWeek, usageMap);
+      slots[role] = picked;
+      if (picked) {
+        usedThisWeek.add(picked);
+        // increment in-memory usage so same person isn't picked twice in same generation pass
+        if (usageMap[picked]) usageMap[picked][role]=(usageMap[picked][role]||0)+1;
+      }
+    });
+
+    // set non-active slots to null
+    ['ds','lv','il'].forEach(r=>{ if(!(r in slots)) slots[r]=null; });
+
+    days.push({ dayKey:d.key, label:d.label, tag:d.tag, tagClass:d.tagClass, slots });
+  }
+
+  pendingSchedule = { weekStart: dateVal, days };
+  renderPending();
+  document.getElementById('result-section').style.display='block';
+  document.getElementById('result-section').scrollIntoView({behavior:'smooth'});
+}
+
+function renderPending() {
+  if (!pendingSchedule) return;
+  document.getElementById('result-days').innerHTML = pendingSchedule.days.map(d=>
+    renderSchedDay(d, true, null)
+  ).join('');
+}
+
+function renderSchedDay(d, editable, weekId) {
+  const slots = [
+    {role:'ds', icon:'🖥', cls:'ds', label:'Datashow'},
+    {role:'lv', icon:'🎥', cls:'lv', label:'Live'},
+    {role:'il', icon:'💡', cls:'il', label:'Iluminação'},
+  ].filter(s=>d.slots[s.role]!==undefined && d.slots[s.role]!==null || editable ? true : false)
+   .filter(s=>d.slots[s.role]!==undefined);
+
+  // Only show slots that exist in this day (not null means it was requested)
+  const activeSlots = slots.filter(s=>{
+    // null means "not scheduled", undefined means "not requested"
+    if (editable) {
+      // in pending, show all non-undefined
+      return d.slots[s.role] !== undefined;
+    }
+    // in history, show all slots that have a value (even null means "was scheduled, no one found")
+    // We'll show all that exist in slots
+    return s.role in d.slots;
+  });
+
+  return `<div class="sched-day">
+    <div class="sched-day-head">
+      <span class="sched-day-name">${d.label}</span>
+      <span class="day-tag ${d.tagClass}">${d.tag}</span>
+    </div>
+    <div class="sched-slots">
+      ${activeSlots.map(s=>{
+        const volId = d.slots[s.role];
+        const vol = volId ? DB.volunteers.find(v=>v.id===volId) : null;
+        const name = vol ? vol.nome : null;
+        let swapHtml = '';
+        if (editable) {
+          const skillName = SKILL_MAP[s.role];
+          const eligible = DB.volunteers.filter(v=>(v.habilidades||[]).includes(skillName));
+          swapHtml = `<select class="swap-sel" onchange="swapPending('${d.dayKey}','${s.role}',this.value)">
+            <option value="">-- trocar --</option>
+            ${eligible.map(v=>`<option value="${v.id}" ${v.id===volId?'selected':''}>${esc(v.nome)}</option>`).join('')}
+            <option value="null">Ninguém</option>
+          </select>`;
+        } else if (weekId) {
+          const skillName = SKILL_MAP[s.role];
+          const eligible = DB.volunteers.filter(v=>(v.habilidades||[]).includes(skillName));
+          swapHtml = `<select class="hist-swap" onchange="swapHist('${weekId}','${d.dayKey}','${s.role}',this.value)">
+            <option value="">trocar</option>
+            ${eligible.map(v=>`<option value="${v.id}" ${v.id===volId?'selected':''}>${esc(v.nome)}</option>`).join('')}
+            <option value="null">Ninguém</option>
+          </select>`;
+        }
+        return `<div class="sched-slot">
+          <div class="sched-slot-icon ${s.cls}">${s.icon}</div>
+          <div class="sched-slot-info">
+            <div class="sched-slot-role">${s.label}</div>
+            <div class="sched-slot-person ${!name?'empty':''}">${name?esc(name):'Sem voluntário'}</div>
+          </div>
+          ${swapHtml?`<div class="sched-slot-action">${swapHtml}</div>`:''}
+        </div>`;
+      }).join('')}
+    </div>
+  </div>`;
+}
+
+function swapPending(dayKey, role, volId) {
+  if (!pendingSchedule) return;
+  const day = pendingSchedule.days.find(d=>d.dayKey===dayKey);
+  if (!day) return;
+  day.slots[role] = volId==='null' ? null : volId || null;
+  renderPending();
+}
+
+function salvarEscala() {
+  if (!pendingSchedule) return;
+  const entry = {
+    id: uid(),
+    weekStart: pendingSchedule.weekStart,
+    weekLabel: weekLabel(pendingSchedule.weekStart),
+    days: pendingSchedule.days
+  };
+  // Remove existing entry for same week
+  DB.history = DB.history.filter(h=>h.weekStart!==entry.weekStart);
+  DB.history.unshift(entry);
+  if (DB.history.length>52) DB.history=DB.history.slice(0,52);
+  saveDB();
+  pendingSchedule=null;
+  document.getElementById('result-section').style.display='none';
+  toast('Escala salva ✓','ok');
+}
+
+function descartarEscala() {
+  pendingSchedule=null;
+  document.getElementById('result-section').style.display='none';
+}
+
+// ────────────────────────────────────────────
+//  WHATSAPP FORMATTER
+// ────────────────────────────────────────────
+const DAY_LABEL_MAP = {
+  'ebd-dom':   { title:'EBD' },
+  'culto-dom': { title:'Domingo' },
+  'sab':       { title:'Sábado' },
+  'sex':       { title:'Sexta-feira' },
+  'qui':       { title:'Quinta-feira' },
+  'qua':       { title:'Quarta-feira' },
+  'ter':       { title:'Terça-feira' },
+  'seg':       { title:'Segunda-feira' },
+};
+
+function formatarWhatsApp(days) {
+  const ROLE_LABEL = { ds:'Datashow', lv:'Live', il:'Iluminação' };
+
+  const linhas = days.map(d=>{
+    const titulo = DAY_LABEL_MAP[d.dayKey]?.title || d.label;
+    const slots = Object.entries(d.slots)
+      .filter(([,volId])=>volId)
+      .map(([role, volId])=>{
+        const vol = DB.volunteers.find(v=>v.id===volId);
+        const nome = vol ? vol.nome.split(' ')[0] : '?'; // primeiro nome
+        return `${ROLE_LABEL[role]}: ${nome}`;
+      });
+    if (!slots.length) return null;
+    return `*${titulo}:*\n${slots.join('\n')}`;
+  }).filter(Boolean);
+
+  if (!linhas.length) return '';
+
+  return `Opa pessoal 🙌, a escala da semana:\n\n${linhas.join('\n\n')}\n\nQuem não puder, me avisa com antecedência por favor! 🙏`;
+}
+
+function copiarWhatsApp(texto) {
+  if (!texto) { toast('Nenhuma pessoa escalada ainda','err'); return; }
+  navigator.clipboard.writeText(texto)
+    .then(()=>toast('Copiado para o WhatsApp ✓','ok'))
+    .catch(()=>{
+      const ta=document.createElement('textarea'); ta.value=texto;
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+      toast('Copiado para o WhatsApp ✓','ok');
+    });
+}
+
+function copiarWhatsAppPending() {
+  if (!pendingSchedule) return;
+  copiarWhatsApp(formatarWhatsApp(pendingSchedule.days));
+}
+
+function copiarWhatsAppHist(weekId) {
+  const week = DB.history.find(h=>h.id===weekId);
+  if (!week) return;
+  copiarWhatsApp(formatarWhatsApp(week.days));
+}
+
+// ════════════════════════════════════════════
+//  HISTORY
+// ════════════════════════════════════════════
+function renderHist() {
+  const el=document.getElementById('hist-list');
+  const sub=document.getElementById('ph-hist-sub');
+  sub.textContent=`${DB.history.length} semana${DB.history.length!==1?'s':''}`;
+
+  if (!DB.history.length) {
+    el.innerHTML=`<div class="empty"><div class="empty-ico">📋</div><h3>Sem histórico ainda</h3><p>Gera e salva a primeira escala.</p></div>`;
+    return;
+  }
+
+  el.innerHTML = DB.history.map(week=>`
+    <div class="hist-week">
+      <div class="hist-week-head" onclick="toggleHist('${week.id}')">
+        <div>
+          <div class="hist-week-title">${esc(week.weekLabel)}</div>
+          <div class="hist-week-sub">${week.days.length} dia${week.days.length!==1?'s':''} escalados</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button class="btn btn-ghost btn-icon btn-sm" onclick="event.stopPropagation();copiarWhatsAppHist('${week.id}')" title="Copiar para WhatsApp">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+          </button>
+          <button class="btn btn-danger btn-icon btn-sm" onclick="event.stopPropagation();removerSemana('${week.id}')" title="Remover semana">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+          </button>
+          <svg class="chevron" id="chev-${week.id}" viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+      <div class="hist-week-body" id="hwb-${week.id}">
+        ${week.days.map(d=>renderHistDay(d, week.id)).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderHistDay(d, weekId) {
+  const slots = [
+    {role:'ds', icon:'🖥', cls:'ds', label:'Datashow'},
+    {role:'lv', icon:'🎥', cls:'lv', label:'Live'},
+    {role:'il', icon:'💡', cls:'il', label:'Iluminação'},
+  ].filter(s=>s.role in d.slots);
+
+  return `<div class="hist-day-row">
+    <div class="hist-day-label">
+      ${d.label} <span class="day-tag ${d.tagClass}" style="font-size:9px;">${d.tag}</span>
+    </div>
+    <div class="hist-slots">
+      ${slots.map(s=>{
+        const volId=d.slots[s.role];
+        const vol=volId?DB.volunteers.find(v=>v.id===volId):null;
+        const name=vol?vol.nome:null;
+        const skillName=SKILL_MAP[s.role];
+        const eligible=DB.volunteers.filter(v=>(v.habilidades||[]).includes(skillName));
+        return `<div class="hist-slot">
+          <div class="hist-slot-icon ${s.cls}">${s.icon}</div>
+          <div class="hist-slot-role">${s.label}</div>
+          <div class="hist-slot-person ${!name?'empty':''}" id="hsp-${weekId}-${d.dayKey}-${s.role}">${name?esc(name):'—'}</div>
+          <select class="hist-swap" onchange="swapHist('${weekId}','${d.dayKey}','${s.role}',this.value)">
+            <option value="">trocar</option>
+            ${eligible.map(v=>`<option value="${v.id}" ${v.id===volId?'selected':''}>${esc(v.nome)}</option>`).join('')}
+            <option value="null">Ninguém</option>
+          </select>
+        </div>`;
+      }).join('')}
+    </div>
+  </div>`;
+}
+
+function toggleHist(id) {
+  const body=document.getElementById('hwb-'+id);
+  const chev=document.getElementById('chev-'+id);
+  const open=body.classList.toggle('open');
+  chev.classList.toggle('open',open);
+}
+
+function swapHist(weekId, dayKey, role, volId) {
+  if (!volId) return;
+  const week=DB.history.find(h=>h.id===weekId);
+  if (!week) return;
+  const day=week.days.find(d=>d.dayKey===dayKey);
+  if (!day) return;
+  day.slots[role]=volId==='null'?null:volId;
+  saveDB();
+  // Update display
+  const nameEl=document.getElementById(`hsp-${weekId}-${dayKey}-${role}`);
+  if (nameEl) {
+    const vol=volId&&volId!=='null'?DB.volunteers.find(v=>v.id===volId):null;
+    nameEl.textContent=vol?vol.nome:'—';
+    nameEl.className='hist-slot-person'+(vol?'':' empty');
+  }
+  toast('Troca salva ✓','ok');
+}
+
+function removerSemana(id) {
+  if (!confirm('Remover esta semana do histórico?')) return;
+  DB.history=DB.history.filter(h=>h.id!==id);
+  saveDB();
+  renderHist();
+  toast('Semana removida','inf');
+}
+
+// ════════════════════════════════════════════
+//  VOLUNTEERS (read-only — sourced from equipe.json)
+// ════════════════════════════════════════════
+let equipeSource = 'local'; // 'json' | 'local' | 'none'
+
+function renderVols() {
+  const el=document.getElementById('vol-list');
+  const sub=document.getElementById('ph-vol-sub');
+  sub.textContent=`${DB.volunteers.length} voluntário${DB.volunteers.length!==1?'s':''}`;
+  renderVolBanner();
+
+  if (!DB.volunteers.length) {
+    el.innerHTML=`<div class="empty"><div class="empty-ico">🙌</div><h3>Nenhum voluntário</h3><p>Gera o ficheiro equipe.json com a IA e coloca-o na mesma pasta deste HTML.</p></div>`;
+    return;
+  }
+  el.innerHTML=DB.volunteers.map(v=>{
+    const ini=v.nome.split(' ').map(n=>n[0]).slice(0,2).join('').toUpperCase();
+    const habs=(v.habilidades||[]).map(h=>{
+      if(h==='Datashow') return '<span class="badge badge-ds">🖥 Datashow</span>';
+      if(h==='Live')     return '<span class="badge badge-lv">🎥 Live</span>';
+      if(h==='Iluminação') return '<span class="badge badge-il">💡 Iluminação</span>';
+      return `<span class="badge">${esc(h)}</span>`;
+    }).join(' ');
+    return `<div class="vol-item">
+      <div class="vol-av">${ini}</div>
+      <div class="vol-info">
+        <div class="vol-name">${esc(v.nome)}</div>
+        <div class="vol-roles" style="margin-top:5px;">${habs||'<span style="color:var(--ink3);font-size:12px;">Sem habilidades</span>'}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderVolBanner() {
+  const el=document.getElementById('vol-source-banner');
+  if (!el) return;
+  if (equipeSource==='json') {
+    el.innerHTML=`<div class="card" style="margin-bottom:10px;"><div class="card-body" style="display:flex;align-items:center;gap:10px;padding:10px 14px;">
+      <span style="font-size:16px;">✅</span>
+      <div style="font-size:12px;color:var(--ink2);line-height:1.4;">Lista carregada de <strong style="color:var(--green);">equipe.json</strong> — qualquer pessoa que abrir esta página vê a mesma equipa.</div>
+    </div></div>`;
+  } else if (equipeSource==='local') {
+    el.innerHTML=`<div class="card" style="margin-bottom:10px;border-color:rgba(210,153,34,.4);"><div class="card-body" style="display:flex;align-items:center;gap:10px;padding:10px 14px;">
+      <span style="font-size:16px;">⚠️</span>
+      <div style="font-size:12px;color:var(--ink2);line-height:1.4;">Não foi encontrado <strong>equipe.json</strong> nesta pasta. A lista abaixo é a salva localmente neste navegador. Gera o ficheiro e coloca-o ao lado deste HTML para a equipa ficar disponível para todos.</div>
+    </div></div>`;
+  } else {
+    el.innerHTML='';
+  }
+}
+
+async function loadEquipeJSON() {
+  try {
+    const res = await fetch('equipe.json', {cache:'no-store'});
+    if (!res.ok) throw new Error('not found');
+    const data = await res.json();
+    if (!Array.isArray(data)) throw new Error('formato inválido');
+    DB.volunteers = data.map(v=>({
+      id: v.id || uid(),
+      nome: v.nome,
+      habilidades: (v.habilidades||[]).filter(h=>['Datashow','Live','Iluminação'].includes(h))
+    }));
+    equipeSource='json';
+    saveDB();
+  } catch(e) {
+    equipeSource = DB.volunteers.length ? 'local' : 'local';
+  }
+}
+
+function abrirPromptModal() {
+  document.getElementById('ta-prompt-preview').value = montarPromptEquipe();
+  openModal('mo-prompt');
+}
+
+function copiarPromptEquipe() {
+  const prompt = montarPromptEquipe();
+  navigator.clipboard.writeText(prompt).then(()=>toast('Prompt copiado ✓','ok')).catch(()=>{
+    const ta=document.createElement('textarea'); ta.value=prompt;
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    toast('Prompt copiado ✓','ok');
+  });
+}
+
+function montarPromptEquipe() {
+  return `Atua como um assistente de dados. Transforma o texto livre abaixo, com os nomes da equipa e as suas habilidades, num JSON estruturado.
+
+Formato de saída: um array de objetos, cada um com as chaves:
+- "nome": string com o nome completo da pessoa
+- "habilidades": array contendo qualquer combinação de "Datashow", "Live", "Iluminação" (exatamente estes nomes, com acentuação)
+
+Regras:
+- Não incluas a chave "id".
+- Se uma pessoa não tiver nenhuma habilidade clara no texto, deixa o array "habilidades" vazio.
+- Retorna APENAS o JSON puro, sem texto explicativo, sem comentários, sem blocos de código (sem \`\`\`).
+
+Exemplo de saída esperada:
+[
+  {"nome": "João Silva", "habilidades": ["Datashow", "Live"]},
+  {"nome": "Maria Santos", "habilidades": ["Iluminação"]}
+]
+
+Texto com a equipa:
+[Cola aqui a lista de nomes e habilidades, por exemplo: "João Silva sabe mexer no Datashow e na transmissão Live. Maria Santos só faz Iluminação. Pedro Costa faz tudo."]`;
+}
+
+// ════════════════════════════════════════════
+//  EXPORT / IMPORT
+// ════════════════════════════════════════════
+function exportarDados() {
+  const json=JSON.stringify(DB, null, 2);
+  const blob=new Blob([json],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=`escala-equipa-${new Date().toISOString().split('T')[0]}.json`;
+  a.click(); URL.revokeObjectURL(url);
+  toast('JSON exportado ✓','ok');
+}
+
+function importarDados() {
+  const raw=document.getElementById('ta-import').value.trim();
+  try {
+    const data=JSON.parse(raw.replace(/```json|```/g,'').trim());
+    if (!data.volunteers && !data.history) throw new Error('Formato inválido');
+    if (data.volunteers) DB.volunteers=data.volunteers;
+    if (data.history)    DB.history=data.history;
+    saveDB();
+    document.getElementById('ta-import').value='';
+    closeModal('mo-import');
+    renderVols(); renderHist();
+    toast('Dados importados ✓','ok');
+  } catch(e) { toast('JSON inválido','err'); }
+}
+
+// ════════════════════════════════════════════
+//  UTILS
+// ════════════════════════════════════════════
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ════════════════════════════════════════════
+//  PWA
+// ════════════════════════════════════════════
+const manifestData={name:"Escala Igreja",short_name:"Escala",start_url:".",display:"standalone",background_color:"#0D1117",theme_color:"#0D1117",icons:[{src:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='32' fill='%230D1117'/><text y='140' x='24' font-size='130'>⛪</text></svg>",sizes:"192x192",type:"image/svg+xml"}]};
+const mblob=new Blob([JSON.stringify(manifestData)],{type:'application/manifest+json'});
+const murl=URL.createObjectURL(mblob);
+const mlink=document.createElement('link'); mlink.rel='manifest'; mlink.href=murl;
+document.head.appendChild(mlink);
+
+if ('serviceWorker' in navigator) {
+  const sw=`const C='escala-v2';self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));`;
+  const swb=new Blob([sw],{type:'application/javascript'});
+  navigator.serviceWorker.register(URL.createObjectURL(swb)).catch(()=>{});
+}
+
+// ════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════
+loadDB();
+initDayConfig();
+
+// Set this week
+const todayISO=new Date().toISOString().split('T')[0];
+const thisWeekStr=dateToIsoWeekString(todayISO);
+document.getElementById('inp-week-date').value=thisWeekStr;
+document.getElementById('ph-week-label').textContent=weekLabel(isoWeekStringToSunday(thisWeekStr));
+
+renderDayBuilder();
+renderVols(); // initial render with whatever's in localStorage (or empty)
+
+loadEquipeJSON().then(()=>{
+  renderVols();
+  if (equipeSource==='json') toast('Equipa carregada de equipe.json ✓','ok');
+});
+</script>
+</body>
+</html>
